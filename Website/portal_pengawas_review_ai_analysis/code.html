@@ -1,0 +1,377 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Supervisor Review Portal | Pengawas SMA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+        }
+        .glass-ai {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(78, 189, 176, 0.3);
+        }
+        .ai-border-glow {
+            box-shadow: 0 0 15px rgba(78, 189, 176, 0.15);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c5c5d3;
+            border-radius: 10px;
+        }
+        .pdf-mock-page {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#b6c4ff",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#fea619",
+                        "tertiary-fixed": "#89f5e7",
+                        "outline-variant": "#c5c5d3",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-container": "#eceef0",
+                        "on-secondary-container": "#684000",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-fixed-dim": "#6bd8cb",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "surface-tint": "#4059aa",
+                        "tertiary": "#00312c",
+                        "surface-container-low": "#f2f4f6",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#855300",
+                        "on-secondary-fixed": "#2a1700",
+                        "inverse-surface": "#2d3133",
+                        "surface": "#f7f9fb",
+                        "primary-container": "#1e3a8a",
+                        "on-surface-variant": "#444651",
+                        "on-secondary": "#ffffff",
+                        "outline": "#757682",
+                        "surface-dim": "#d8dadc",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-tertiary-container": "#4ebdb0",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#ffddb8",
+                        "inverse-primary": "#b6c4ff",
+                        "on-surface": "#191c1e",
+                        "on-tertiary-fixed": "#00201d",
+                        "on-tertiary-fixed-variant": "#005049",
+                        "tertiary-container": "#004942",
+                        "on-primary-fixed-variant": "#264191",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "on-tertiary": "#ffffff",
+                        "primary": "#00236f",
+                        "primary-fixed": "#dce1ff",
+                        "surface-variant": "#e0e3e5",
+                        "on-primary-container": "#90a8ff",
+                        "on-background": "#191c1e",
+                        "background": "#f7f9fb",
+                        "on-primary-fixed": "#00164e",
+                        "surface-bright": "#f7f9fb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "container-max-width": "1280px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "stack-lg": "24px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "32px"
+                    },
+                    "fontFamily": {
+                        "title-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-hidden">
+<!-- Top Navigation Anchor -->
+<header class="bg-primary dark:bg-primary-container text-on-primary shadow-md fixed top-0 w-full z-50 h-16">
+<div class="flex justify-between items-center w-full px-margin-desktop max-w-container-max-width mx-auto h-full">
+<div class="flex items-center gap-stack-md">
+<span class="material-symbols-outlined text-secondary-fixed">school</span>
+<h1 class="font-title-md text-title-md font-bold text-on-primary">Pengawas SMA</h1>
+</div>
+<nav class="hidden md:flex gap-gutter items-center">
+<a class="text-on-primary border-b-2 border-secondary-container pb-1 font-label-md" href="#">Home</a>
+<a class="text-on-primary/80 hover:text-secondary-fixed transition-colors font-label-md" href="#">Profile</a>
+<a class="text-on-primary/80 hover:text-secondary-fixed transition-colors font-label-md" href="#">Schools</a>
+<a class="text-on-primary/80 hover:text-secondary-fixed transition-colors font-label-md" href="#">News</a>
+</nav>
+<div class="flex gap-stack-md items-center">
+<button class="bg-secondary-container text-on-secondary-container px-stack-md py-1.5 rounded-xl font-label-md font-bold hover:opacity-90 transition-opacity">
+                    Jadwal Supervisi
+                </button>
+</div>
+</div>
+</header>
+<div class="flex h-screen pt-16">
+<!-- Sidebar Navigation Anchor -->
+<aside class="bg-surface-container-low dark:bg-inverse-surface w-64 flex flex-col h-full py-stack-lg shadow-sm z-40">
+<div class="px-stack-lg mb-stack-lg flex items-center gap-stack-md">
+<img class="w-12 h-12 rounded-full object-cover border-2 border-primary" data-alt="Professional headshot of a senior Indonesian male academic supervisor in a clean corporate office setting. He is wearing a formal batik shirt and smiling warmly but authoritatively. The lighting is bright and even, reflecting a light-mode modern UI aesthetic with clean white backgrounds." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSBVzIWrj78AQE-779DfGzaTVsMdVkfgkimLi_e1Sp6n6-xP0l2MMv4lmkqTjUG0PA6jhNYB3fEgHar7Tb07ypqX8YfOtBZJRj223Yh59YP11BpRs58IHBonTB-MXQc5DpNHeVZ0gigr8ZtJ48-L0XLuqu3GDhiI8D2D8pPMNUqFwt0tcKiHhoLM7geHS9M6azvkS5bJwp2x7FoBkGv_WqMWS3Gi5RPomVpxVRxQNpV7hhYwJ4BC7w">
+<div>
+<h3 class="font-title-md text-label-md text-primary font-bold">Drs. Ahmad M.Pd</h3>
+<p class="text-on-surface-variant text-[12px]">Senior Supervisor</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-stack-md text-on-surface-variant pl-4 py-3 hover:bg-surface-container-highest transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">dashboard</span>
+<span class="font-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-stack-md text-primary font-bold border-l-4 border-primary pl-4 py-3 bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined">verified_user</span>
+<span class="font-label-md">Verification</span>
+</a>
+<a class="flex items-center gap-stack-md text-on-surface-variant pl-4 py-3 hover:bg-surface-container-highest transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">menu_book</span>
+<span class="font-label-md">Logbook</span>
+</a>
+<a class="flex items-center gap-stack-md text-on-surface-variant pl-4 py-3 hover:bg-surface-container-highest transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">settings</span>
+<span class="font-label-md">Settings</span>
+</a>
+</nav>
+<div class="px-4 mt-auto space-y-4">
+<button class="w-full bg-primary text-on-primary py-2.5 rounded-xl font-label-md font-bold flex items-center justify-center gap-2 hover:opacity-90">
+<span class="material-symbols-outlined">upload_file</span>
+                    Unggah Laporan
+                </button>
+<div class="border-t border-outline-variant pt-4">
+<a class="flex items-center gap-stack-md text-on-surface-variant pl-2 py-2 font-label-md hover:text-primary" href="#">
+<span class="material-symbols-outlined">help</span> Help Center
+                    </a>
+<a class="flex items-center gap-stack-md text-error pl-2 py-2 font-label-md hover:opacity-80" href="#">
+<span class="material-symbols-outlined">logout</span> Logout
+                    </a>
+</div>
+</div>
+</aside>
+<!-- Main Content Area: Document Preview & AI Panel -->
+<main class="flex-1 flex bg-surface overflow-hidden">
+<!-- Left: Document Preview Pane -->
+<section class="flex-1 p-stack-lg flex flex-col gap-stack-md overflow-y-auto">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-stack-md">
+<h2 class="font-headline-lg text-headline-lg text-primary">Modul Ajar - Biologi Kelas XI</h2>
+<span class="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-xs font-bold">Pending Review</span>
+</div>
+<div class="flex gap-2">
+<button class="p-2 hover:bg-surface-container-highest rounded-full transition-colors"><span class="material-symbols-outlined">zoom_in</span></button>
+<button class="p-2 hover:bg-surface-container-highest rounded-full transition-colors"><span class="material-symbols-outlined">zoom_out</span></button>
+<button class="p-2 hover:bg-surface-container-highest rounded-full transition-colors"><span class="material-symbols-outlined">download</span></button>
+</div>
+</div>
+<div class="pdf-mock-page bg-white min-h-[1000px] p-12 mx-auto w-full max-w-4xl flex flex-col gap-stack-lg text-on-surface border border-outline-variant">
+<header class="text-center border-b-2 border-primary pb-stack-md">
+<h3 class="font-title-md text-primary uppercase">Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi</h3>
+<p class="font-label-sm text-on-surface-variant">SMA Negeri 01 Jakarta - Kurikulum Merdeka 2024</p>
+</header>
+<div class="grid grid-cols-2 gap-stack-lg mt-stack-md">
+<div class="space-y-2">
+<p class="font-label-sm text-outline">Mata Pelajaran</p>
+<p class="font-body-md font-bold">Biologi</p>
+</div>
+<div class="space-y-2">
+<p class="font-label-sm text-outline">Penyusun</p>
+<p class="font-body-md font-bold">Siti Aminah, S.Pd</p>
+</div>
+</div>
+<div class="mt-stack-lg space-y-stack-md">
+<h4 class="font-title-md text-primary border-l-4 border-secondary pl-2">I. Tujuan Pembelajaran</h4>
+<p class="font-body-md leading-relaxed text-justify">Peserta didik mampu menganalisis keterkaitan antara struktur sel pada jaringan tumbuhan dengan fungsi organ tumbuhan. Melalui kegiatan pengamatan mikroskopis, siswa diharapkan mampu mengidentifikasi tipe-tipe jaringan penyusun akar, batang, dan daun secara kritis dan mandiri.</p>
+<h4 class="font-title-md text-primary border-l-4 border-secondary pl-2">II. Profil Pelajar Pancasila</h4>
+<ul class="list-disc list-inside font-body-md space-y-1">
+<li class="">Mandiri: Siswa menyusun laporan praktikum secara individu.</li>
+<li class="">Bernalar Kritis: Menganalisis perbedaan fungsi stomata pada siang dan malam hari.</li>
+<li class="">Kreatif: Membuat model 3D struktur sel dari bahan daur ulang.</li>
+</ul>
+<h4 class="font-title-md text-primary border-l-4 border-secondary pl-2">III. Langkah Pembelajaran (Pertemuan 1)</h4>
+<div class="space-y-2">
+<p class="font-body-md font-bold text-secondary">A. Pendahuluan (15 Menit)</p>
+<p class="font-body-md text-on-surface-variant italic">Guru memberikan pertanyaan pemantik: "Pernahkah kalian melihat pohon yang sangat tinggi? Bagaimana air dari tanah bisa sampai ke pucuk daun?"</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Right: AI Co-pilot Analysis & Rubric -->
+<section class="w-[420px] bg-surface-container-low border-l border-outline-variant flex flex-col h-full">
+<div class="p-stack-md bg-white border-b border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-tertiary-container" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<h3 class="font-title-md text-label-md text-primary">AI Co-pilot Analysis</h3>
+<span class="bg-emerald-100 text-emerald-600 px-2 py-0.5 rounded text-[10px] font-bold uppercase flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">chat</span>WA ACTIVE</span></div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded text-[10px] font-bold uppercase">Beta</span>
+</div>
+<div class="flex-1 overflow-y-auto p-stack-md space-y-stack-lg">
+<!-- Ringkasan Eksekutif AI -->
+<div class="glass-ai p-stack-md rounded-xl ai-border-glow">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-on-tertiary-container text-body-md">summarize</span>
+<h4 class="font-label-md font-bold text-primary">Ringkasan Eksekutif AI</h4>
+</div>
+<p class="text-[13px] leading-relaxed text-on-surface-variant">
+                            Dokumen ini adalah Modul Ajar Biologi Fase F. Fokus utama pada struktur dan fungsi sel tumbuhan. Struktur dokumen sudah mengikuti standar Kurikulum Merdeka namun memerlukan penajaman pada instrumen asesmen sumatif.
+                        </p>
+</div>
+<!-- Pemeriksaan Kelengkapan Otomatis -->
+<div class="space-y-stack-md">
+<h4 class="font-label-sm uppercase text-outline tracking-widest">Pemeriksaan Kelengkapan</h4>
+<div class="space-y-2">
+<div class="flex items-center justify-between bg-white p-2 rounded border border-outline-variant">
+<span class="text-label-md text-on-surface">Tujuan Pembelajaran</span>
+<span class="material-symbols-outlined text-emerald-500">check_circle</span>
+</div>
+<div class="flex items-center justify-between bg-white p-2 rounded border border-outline-variant">
+<span class="text-label-md text-on-surface">Langkah Pembelajaran</span>
+<span class="material-symbols-outlined text-emerald-500">check_circle</span>
+</div>
+<div class="flex items-center justify-between bg-white p-2 rounded border border-outline-variant">
+<span class="text-label-md text-on-surface">Asesmen &amp; Rubrik</span>
+<span class="material-symbols-outlined text-amber-500">warning</span>
+</div>
+<div class="flex items-center justify-between bg-white p-2 rounded border border-outline-variant opacity-60">
+<span class="text-label-md text-on-surface">Media Pembelajaran</span>
+<span class="material-symbols-outlined text-error">cancel</span>
+</div>
+</div>
+</div>
+<!-- Rekomendasi Perbaikan -->
+<div class="bg-tertiary-container p-stack-md rounded-xl text-on-tertiary">
+<h4 class="font-label-md font-bold mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined">lightbulb</span> Rekomendasi Perbaikan
+                        </h4>
+<ul class="text-[12px] space-y-2 opacity-90 list-disc list-inside">
+<li class="">Integrasikan elemen "Kemandirian" lebih dalam pada rubrik penilaian.</li>
+<li class="">Tambahkan tautan video simulasi struktur sel untuk mendukung diferensiasi konten.</li>
+<li class="">Perjelas kriteria ketercapaian tujuan pembelajaran (KKTP).</li>
+</ul>
+</div>
+<!-- Scoring Rubric -->
+<div class="space-y-stack-md">
+<h4 class="font-label-sm uppercase text-outline tracking-widest">Digital Scoring Rubric</h4>
+<div class="bg-white rounded-xl border border-outline-variant p-4 space-y-4">
+<div class="space-y-2">
+<label class="text-label-sm text-on-surface-variant flex justify-between">
+<span class="">Kesesuaian Kurikulum</span>
+<span class="font-bold text-primary">85/100</span>
+</label>
+<input class="w-full h-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary" type="range" value="85">
+</div>
+<div class="space-y-2">
+<label class="text-label-sm text-on-surface-variant flex justify-between">
+<span class="">Kualitas Asesmen</span>
+<span class="font-bold text-primary">60/100</span>
+</label>
+<input class="w-full h-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-secondary" type="range" value="60">
+</div>
+</div>
+</div>
+</div>
+<div class="p-stack-md bg-white border-t border-outline-variant mt-auto">
+<button class="w-full bg-secondary-container text-on-secondary-container py-3 rounded-xl font-title-md flex items-center justify-center gap-2 hover:bg-secondary transition-all active:scale-95 shadow-md" id="publishBtn">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified</span>
+                        Terbitkan Pengesahan (QR Code)
+                    </button>
+</div>
+</section>
+</main>
+</div>
+<!-- Success Modal -->
+<div class="fixed inset-0 z-[100] hidden flex items-center justify-center" id="successModal">
+<div class="absolute inset-0 bg-primary/40 backdrop-blur-sm"></div>
+<div class="relative bg-white p-10 rounded-2xl shadow-2xl max-w-md w-full text-center scale-95 transition-transform duration-300" id="modalContent">
+<div class="mb-stack-lg">
+<div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
+<span class="material-symbols-outlined text-[48px]">check_circle</span>
+</div>
+<h2 class="font-display-lg text-title-md text-primary mb-2">Verifikasi Berhasil!</h2>
+<p class="text-on-surface-variant">Dokumen telah disahkan secara digital dan QR Code pengesahan telah diterbitkan ke sistem sekolah.</p>
+</div>
+<div class="bg-surface p-6 rounded-xl border border-dashed border-outline mb-stack-lg flex justify-center">
+<!-- Mock QR Code -->
+<div class="w-40 h-40 bg-white p-2 border border-outline">
+<div class="w-full h-full bg-[repeating-linear-gradient(45deg,#000_0,#000_10px,#fff_10px,#fff_20px)] opacity-20"></div>
+</div>
+</div>
+<button class="w-full py-3 bg-primary text-on-primary rounded-xl font-bold hover:opacity-90 transition-opacity" id="closeModal">
+                Selesai &amp; Tutup
+            </button>
+</div>
+</div>
+<script>
+        const publishBtn = document.getElementById('publishBtn');
+        const successModal = document.getElementById('successModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalContent = document.getElementById('modalContent');
+
+        publishBtn.addEventListener('click', () => {
+            successModal.classList.remove('hidden');
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 50);
+        });
+
+        closeModal.addEventListener('click', () => {
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                successModal.classList.add('hidden');
+            }, 200);
+        });
+
+        // Simple smooth scroll interaction for side nav
+        document.querySelectorAll('aside nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                if(link.getAttribute('href') === '#') e.preventDefault();
+            });
+        });
+    </script>
+
+
+</body></html>

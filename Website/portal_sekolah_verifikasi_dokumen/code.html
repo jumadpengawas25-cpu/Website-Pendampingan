@@ -1,0 +1,509 @@
+<!DOCTYPE html><html class="light" lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Portal Unggah Laporan - Pengawas SMA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet">
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "primary-fixed-dim": "#b6c4ff",
+                "on-secondary-fixed-variant": "#653e00",
+                "error": "#ba1a1a",
+                "secondary-container": "#fea619",
+                "tertiary-fixed": "#89f5e7",
+                "outline-variant": "#c5c5d3",
+                "inverse-on-surface": "#eff1f3",
+                "surface-container": "#eceef0",
+                "on-secondary-container": "#684000",
+                "surface-container-high": "#e6e8ea",
+                "tertiary-fixed-dim": "#6bd8cb",
+                "secondary-fixed-dim": "#ffb95f",
+                "surface-tint": "#4059aa",
+                "tertiary": "#00312c",
+                "surface-container-low": "#f2f4f6",
+                "surface-container-lowest": "#ffffff",
+                "secondary": "#855300",
+                "on-secondary-fixed": "#2a1700",
+                "inverse-surface": "#2d3133",
+                "surface": "#f7f9fb",
+                "primary-container": "#1e3a8a",
+                "on-surface-variant": "#444651",
+                "on-secondary": "#ffffff",
+                "outline": "#757682",
+                "surface-dim": "#d8dadc",
+                "on-error": "#ffffff",
+                "surface-container-highest": "#e0e3e5",
+                "on-tertiary-container": "#4ebdb0",
+                "on-primary": "#ffffff",
+                "secondary-fixed": "#ffddb8",
+                "inverse-primary": "#b6c4ff",
+                "on-surface": "#191c1e",
+                "on-tertiary-fixed": "#00201d",
+                "on-tertiary-fixed-variant": "#005049",
+                "tertiary-container": "#004942",
+                "on-primary-fixed-variant": "#264191",
+                "error-container": "#ffdad6",
+                "on-error-container": "#93000a",
+                "on-tertiary": "#ffffff",
+                "primary": "#00236f",
+                "primary-fixed": "#dce1ff",
+                "surface-variant": "#e0e3e5",
+                "on-primary-container": "#90a8ff",
+                "on-background": "#191c1e",
+                "background": "#f7f9fb",
+                "on-primary-fixed": "#00164e",
+                "surface-bright": "#f7f9fb"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+            },
+            "spacing": {
+                "unit": "4px",
+                "container-max-width": "1280px",
+                "stack-sm": "8px",
+                "stack-md": "16px",
+                "stack-lg": "24px",
+                "gutter": "24px",
+                "margin-mobile": "16px",
+                "margin-desktop": "32px"
+            },
+            "fontFamily": {
+                "title-md": ["Inter"],
+                "label-md": ["Inter"],
+                "display-lg": ["Inter"],
+                "body-lg": ["Inter"],
+                "label-sm": ["Inter"],
+                "body-md": ["Inter"],
+                "headline-lg": ["Inter"]
+            },
+            "fontSize": {
+                "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .glass-ai {
+            background: rgba(78, 189, 176, 0.05);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(78, 189, 176, 0.2);
+        }
+        .status-pill {
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-draft { background-color: #f1f5f9; color: #475569; }
+        .status-pending { background-color: #fef3c7; color: #d97706; }
+        .status-verified { background-color: #dcfce7; color: #059669; }
+        .status-revision { background-color: #fee2e2; color: #dc2626; }
+        
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+        
+        body {
+            background-color: #f7f9fb;
+            color: #191c1e;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md overflow-x-hidden">
+<!-- SideNavBar Anchor -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface border-r border-outline-variant flex flex-col py-stack-lg z-50">
+<div class="px-stack-lg mb-stack-lg">
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Pengawas SMA</h1>
+</div>
+<div class="flex flex-col px-stack-md space-y-2 flex-grow">
+<!-- Navigation Items -->
+<a class="flex items-center gap-3 py-3 px-4 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined text-on-surface-variant">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 text-primary font-bold border-l-4 border-primary bg-surface-container-low transition-all" href="#">
+<span class="material-symbols-outlined text-primary">verified_user</span>
+<span class="font-label-md text-label-md">Verification</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined text-on-surface-variant">menu_book</span>
+<span class="font-label-md text-label-md">Logbook</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+<div class="mt-auto px-stack-md pt-stack-lg border-t border-outline-variant">
+<div class="flex items-center gap-3 px-4 mb-stack-lg">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold">AM</div>
+<div>
+<p class="text-label-md font-bold text-on-surface">Drs. Ahmad M.Pd</p>
+<p class="text-label-sm text-on-surface-variant">Senior Supervisor</p>
+</div>
+</div>
+<button class="w-full flex items-center justify-center gap-2 py-3 px-4 bg-secondary text-on-secondary rounded-xl font-bold hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined">upload_file</span>
+                Unggah Laporan
+            </button>
+<nav class="mt-4 space-y-1">
+<a class="flex items-center gap-3 py-2 px-4 text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="text-label-sm">Help Center</span>
+</a>
+<a class="flex items-center gap-3 py-2 px-4 text-error hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="text-label-sm">Logout</span>
+</a>
+</nav>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 p-margin-desktop min-h-screen">
+<!-- Header Section -->
+<header class="flex justify-between items-center mb-stack-lg">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary">Portal Unggah Laporan</h2>
+<p class="text-on-surface-variant font-body-md">Manajemen verifikasi dokumen satuan pendidikan SMA Negeri 1 Jakarta</p>
+</div>
+<div class="flex gap-stack-md">
+<div class="flex items-center gap-2 bg-surface-container-low px-4 py-2 rounded-lg border border-outline-variant">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+<span class="text-label-md font-bold">Semester Ganjil 2024/2025</span>
+</div>
+</div>
+</header>
+<!-- Dynamic Data Counters -->
+<section class="grid grid-cols-4 gap-gutter mb-stack-lg">
+<div class="bg-surface-container-lowest p-stack-md rounded-xl shadow-sm border border-outline-variant/30">
+<p class="text-label-sm text-on-surface-variant uppercase tracking-wider">Total Dokumen</p>
+<div class="flex items-end justify-between mt-1">
+<span class="font-headline-lg text-headline-lg text-primary">24</span>
+<span class="text-label-sm text-primary flex items-center"><span class="material-symbols-outlined text-sm">trending_up</span> +2</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-stack-md rounded-xl shadow-sm border border-outline-variant/30">
+<p class="text-label-sm text-on-surface-variant uppercase tracking-wider">Pending Verifikasi</p>
+<div class="flex items-end justify-between mt-1">
+<span class="font-headline-lg text-headline-lg text-secondary">08</span>
+<div class="w-8 h-1 bg-secondary/20 rounded-full overflow-hidden"><div class="w-1/2 h-full bg-secondary"></div></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-stack-md rounded-xl shadow-sm border border-outline-variant/30">
+<p class="text-label-sm text-on-surface-variant uppercase tracking-wider">Telah Terverifikasi</p>
+<div class="flex items-end justify-between mt-1">
+<span class="font-headline-lg text-headline-lg text-on-tertiary-container">12</span>
+<span class="material-symbols-outlined text-on-tertiary-container">verified</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-stack-md rounded-xl shadow-sm border border-outline-variant/30">
+<p class="text-label-sm text-on-surface-variant uppercase tracking-wider">Perlu Revisi</p>
+<div class="flex items-end justify-between mt-1">
+<span class="font-headline-lg text-headline-lg text-error">04</span>
+<span class="material-symbols-outlined text-error">feedback</span>
+</div>
+</div>
+</section>
+<!-- Bento Layout: Form + Stats -->
+<div class="bento-grid mb-stack-lg">
+<!-- Upload Form (Column 1-8) -->
+<section class="col-span-8 bg-surface-container-lowest rounded-xl p-stack-lg shadow-sm border border-outline-variant/50">
+<div class="flex items-center gap-3 mb-stack-md">
+<span class="material-symbols-outlined text-primary p-2 bg-primary-fixed rounded-lg">upload_file</span>
+<h3 class="font-title-md text-title-md text-on-surface">Unggah Dokumen Baru</h3>
+</div>
+<form class="grid grid-cols-2 gap-stack-lg">
+<div class="col-span-2 md:col-span-1">
+<label class="block text-label-md font-bold text-on-surface mb-2">Kategori Dokumen</label>
+<select class="w-full bg-surface-container-low border-outline-variant rounded-lg p-3 text-body-md focus:ring-2 focus:ring-primary focus:border-primary transition-all">
+<option value="">Pilih Kategori...</option>
+<option value="kosp">KSP / KOSP (Kurikulum Operasional Satuan Pendidikan)</option>
+<option value="arkas">ARKAS (Rencana Kegiatan &amp; Anggaran Sekolah)</option>
+<option value="akm">AKM (Asesmen Kompetensi Minimum)</option>
+<option value="perencanaan">Dokumen Perencanaan Berbasis Data</option>
+</select>
+</div>
+<div class="col-span-2 md:col-span-1">
+<label class="block text-label-md font-bold text-on-surface mb-2">Nama Laporan / Judul</label>
+<input class="w-full bg-surface-container-low border-outline-variant rounded-lg p-3 text-body-md focus:ring-2 focus:ring-primary focus:border-primary" placeholder="Contoh: Laporan KOSP Tahap I" type="text">
+</div>
+<!-- Drag and Drop Area -->
+<div class="col-span-2">
+<div class="border-2 border-dashed border-outline-variant rounded-xl p-stack-lg flex flex-col items-center justify-center bg-surface-container-low hover:bg-surface-container hover:border-primary transition-all cursor-pointer group">
+<span class="material-symbols-outlined text-5xl text-outline mb-4 group-hover:text-primary transition-colors">cloud_upload</span>
+<p class="text-body-md font-bold text-on-surface">Tarik dan lepas file di sini</p>
+<p class="text-label-sm text-on-surface-variant mt-1">Mendukung Format PDF, DOCX (Maks 10MB)</p>
+<button class="mt-4 px-6 py-2 bg-primary text-on-primary rounded-lg font-bold" type="button">Pilih File</button>
+</div>
+</div>
+<div class="col-span-2 flex justify-end gap-stack-md">
+<button class="px-6 py-3 border border-outline-variant rounded-lg font-bold text-on-surface-variant hover:bg-surface-container-highest" type="button">Batalkan</button>
+<button class="px-8 py-3 bg-secondary text-on-secondary rounded-lg font-bold shadow-md hover:shadow-lg transition-all" type="submit">Kirim Dokumen</button>
+</div>
+</form>
+</section>
+<!-- AI Insights / Real-time Status (Column 9-12) -->
+<section class="col-span-4 flex flex-col gap-stack-lg">
+<div class="glass-ai p-stack-lg rounded-xl flex-grow relative overflow-hidden">
+<div class="relative z-10">
+<div class="flex items-center gap-2 text-on-tertiary-fixed-variant mb-stack-md">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span class="font-label-md font-bold uppercase tracking-wider">AI Verifikasi Cepat</span>
+<div class="ml-auto flex items-center gap-1 px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
+    <span class="material-symbols-outlined text-[14px] text-green-600">chat</span>
+    <span class="text-[10px] font-bold text-green-600 uppercase tracking-tighter">WA Active</span>
+</div></div>
+<p class="text-body-md text-on-surface mb-4">Dokumen KOSP Anda sedang dalam tahap pra-analisis otomatis.</p>
+<div class="space-y-4">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-green-600">check_circle</span>
+<div>
+<p class="text-label-md font-bold">Format Dokumen Sesuai</p>
+<p class="text-label-sm text-on-surface-variant">PDF terdeteksi dengan metadata valid.</p>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-amber-500">info</span>
+<div>
+<p class="text-label-md font-bold">Tanda Tangan Digital</p>
+<p class="text-label-sm text-on-surface-variant">Pastikan stempel basah terpindai jelas.</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-2 border border-on-tertiary-container text-on-tertiary-container rounded-lg font-bold text-label-md hover:bg-on-tertiary-container/10 transition-colors">
+                            Lihat Panduan Teknis
+                        </button>
+</div>
+<!-- Subtle background decoration -->
+<div class="absolute -bottom-8 -right-8 w-32 h-32 bg-tertiary-fixed opacity-10 rounded-full blur-3xl"></div>
+</div>
+<div class="bg-surface-container-lowest p-stack-lg rounded-xl border border-outline-variant/30 shadow-sm">
+<h3 class="font-title-md text-title-md text-on-surface mb-stack-md">Aktivitas Terakhir</h3>
+<div class="space-y-4">
+<div class="flex gap-4">
+<div class="w-2 h-2 rounded-full bg-emerald-500 mt-2"></div>
+<div>
+<p class="text-label-md font-bold">ARKAS V2 Terverifikasi</p>
+<p class="text-label-sm text-on-surface-variant">Oleh Pengawas: Drs. Ahmad M.Pd</p>
+<p class="text-[10px] text-outline mt-1">2 jam yang lalu</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-2 h-2 rounded-full bg-amber-500 mt-2"></div>
+<div>
+<p class="text-label-md font-bold">KOSP V1 Butuh Revisi</p>
+<p class="text-label-sm text-on-surface-variant">Halaman 12-14 kurang lengkap</p>
+<p class="text-[10px] text-outline mt-1">Kemarin, 14:30</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Document Management Table -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
+<div class="p-stack-lg border-b border-outline-variant/30 flex justify-between items-center">
+<h3 class="font-title-md text-title-md text-on-surface">Riwayat Verifikasi &amp; Manajemen Dokumen</h3>
+<div class="flex gap-stack-md">
+<div class="relative">
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border-outline-variant rounded-lg text-label-md focus:ring-primary focus:border-primary" placeholder="Cari dokumen..." type="text">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+</div>
+<button class="flex items-center gap-2 px-4 py-2 border border-outline rounded-lg text-label-md font-bold hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined">filter_list</span> Filter
+                    </button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low">
+<tr>
+<th class="px-stack-lg py-4 font-label-md text-on-surface-variant uppercase tracking-wider">Nama Dokumen</th>
+<th class="px-stack-lg py-4 font-label-md text-on-surface-variant uppercase tracking-wider">Kategori</th>
+<th class="px-stack-lg py-4 font-label-md text-on-surface-variant uppercase tracking-wider">Versi</th>
+<th class="px-stack-lg py-4 font-label-md text-on-surface-variant uppercase tracking-wider">Tanggal Unggah</th>
+<th class="px-stack-lg py-4 font-label-md text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="px-stack-lg py-4 font-label-md text-on-surface-variant uppercase tracking-wider text-right">Aksi</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-stack-lg py-5">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">description</span>
+<div>
+<p class="font-label-md font-bold text-on-surface">Laporan KOSP Semester 1</p>
+<p class="text-[11px] text-on-surface-variant">Sesuai Peraturan No. 12/2024</p>
+</div>
+</div>
+</td>
+<td class="px-stack-lg py-5 text-body-md text-on-surface-variant">Kurikulum</td>
+<td class="px-stack-lg py-5">
+<span class="px-2 py-1 bg-primary-fixed text-on-primary-fixed-variant rounded text-[10px] font-bold">V.2</span>
+</td>
+<td class="px-stack-lg py-5 text-body-md text-on-surface-variant">12 Okt 2024</td>
+<td class="px-stack-lg py-5">
+<span class="status-pill status-verified">TERVERIFIKASI</span>
+</td>
+<td class="px-stack-lg py-5 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 hover:bg-surface-container-highest rounded-lg text-primary" title="Lihat">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+<button class="p-2 hover:bg-surface-container-highest rounded-lg text-on-surface-variant" title="Unduh">
+<span class="material-symbols-outlined">download</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-stack-lg py-5">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+<div>
+<p class="font-label-md font-bold text-on-surface">Anggaran ARKAS 2025</p>
+<p class="text-[11px] text-on-surface-variant">Pengajuan Awal Tahun</p>
+</div>
+</div>
+</td>
+<td class="px-stack-lg py-5 text-body-md text-on-surface-variant">Keuangan</td>
+<td class="px-stack-lg py-5">
+<span class="px-2 py-1 bg-surface-container-high text-on-surface-variant rounded text-[10px] font-bold">V.1</span>
+</td>
+<td class="px-stack-lg py-5 text-body-md text-on-surface-variant">15 Okt 2024</td>
+<td class="px-stack-lg py-5">
+<span class="status-pill status-pending">PENDING</span>
+</td>
+<td class="px-stack-lg py-5 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 hover:bg-surface-container-highest rounded-lg text-primary" title="Lihat">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+<button class="p-2 hover:bg-surface-container-highest rounded-lg text-on-surface-variant" title="Edit">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-stack-lg py-5">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">assessment</span>
+<div>
+<p class="font-label-md font-bold text-on-surface">Evaluasi AKM Siswa</p>
+<p class="text-[11px] text-on-surface-variant">Data Sampling Kelas XI</p>
+</div>
+</div>
+</td>
+<td class="px-stack-lg py-5 text-body-md text-on-surface-variant">Evaluasi</td>
+<td class="px-stack-lg py-5">
+<span class="px-2 py-1 bg-surface-container-high text-on-surface-variant rounded text-[10px] font-bold">V.1</span>
+</td>
+<td class="px-stack-lg py-5 text-body-md text-on-surface-variant">08 Okt 2024</td>
+<td class="px-stack-lg py-5">
+<span class="status-pill status-revision">REVISI</span>
+</td>
+<td class="px-stack-lg py-5 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 hover:bg-surface-container-highest rounded-lg text-error" title="Lihat Kritik">
+<span class="material-symbols-outlined">chat_bubble_outline</span>
+</button>
+<button class="p-2 hover:bg-surface-container-highest rounded-lg text-primary font-bold text-label-sm">Unggah V.2</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-stack-md bg-surface-container-low flex justify-between items-center border-t border-outline-variant/30">
+<p class="text-label-sm text-on-surface-variant">Menampilkan 3 dari 24 dokumen</p>
+<div class="flex gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant bg-surface-container-lowest text-on-surface-variant"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-primary bg-primary text-on-primary text-sm font-bold">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant bg-surface-container-lowest text-on-surface-variant text-sm">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant bg-surface-container-lowest text-on-surface-variant"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
+</div>
+</div>
+</section>
+<!-- Footer Anchor -->
+<footer class="mt-stack-lg pt-stack-lg border-t border-outline-variant grid grid-cols-1 md:grid-cols-3 gap-gutter text-on-surface-variant">
+<div class="col-span-1">
+<p class="font-title-md text-title-md text-secondary-fixed mb-2">Pengawas SMA</p>
+<p class="text-label-sm">Portal manajemen dokumen pendidikan terintegrasi untuk transparansi dan akuntabilitas supervisi sekolah.</p>
+</div>
+<div class="col-span-1 flex flex-col gap-2">
+<p class="font-bold text-on-surface mb-1">Tautan Cepat</p>
+<a class="text-label-sm hover:text-primary-fixed-dim transition-colors" href="#">Portal Resmi Kemdikbud</a>
+<a class="text-label-sm hover:text-primary-fixed-dim transition-colors" href="#">Panduan ARKAS</a>
+<a class="text-label-sm hover:text-primary-fixed-dim transition-colors" href="#">Kebijakan Privasi</a>
+</div>
+<div class="col-span-1 text-right">
+<p class="text-label-sm mb-4">© 2024 Dinas Pendidikan - Pengawas SMA. All rights reserved.</p>
+<div class="flex justify-end gap-stack-md">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary">qr_code_2</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary">language</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary">mail</span>
+</div>
+</div>
+</footer>
+</main>
+<!-- Interactions Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Simple micro-interaction for select menus
+            const selects = document.querySelectorAll('select');
+            selects.forEach(select => {
+                select.addEventListener('focus', () => {
+                    select.parentElement.querySelector('label').classList.add('text-primary');
+                });
+                select.addEventListener('blur', () => {
+                    select.parentElement.querySelector('label').classList.remove('text-primary');
+                });
+            });
+
+            // Feedback for file upload simulation
+            const dropzone = document.querySelector('.border-dashed');
+            dropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropzone.classList.add('bg-primary-fixed', 'border-primary');
+            });
+            dropzone.addEventListener('dragleave', () => {
+                dropzone.classList.remove('bg-primary-fixed', 'border-primary');
+            });
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('bg-primary-fixed', 'border-primary');
+                alert('File terdeteksi: ' + e.dataTransfer.files[0].name);
+            });
+        });
+    </script>
+
+
+</body></html>

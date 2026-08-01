@@ -1,0 +1,476 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Digital Logbook - Pengawas SMA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
+        .glass-ai {
+            background: rgba(78, 189, 176, 0.05);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(78, 189, 176, 0.2);
+        }
+        .ai-sparkle-border {
+            position: relative;
+            border: 1px solid transparent;
+            background: linear-gradient(white, white) padding-box,
+                        linear-gradient(to right, #4059aa, #4ebdb0) border-box;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #c5c5d3; border-radius: 10px; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#b6c4ff",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#fea619",
+                        "tertiary-fixed": "#89f5e7",
+                        "outline-variant": "#c5c5d3",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-container": "#eceef0",
+                        "on-secondary-container": "#684000",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-fixed-dim": "#6bd8cb",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "surface-tint": "#4059aa",
+                        "tertiary": "#00312c",
+                        "surface-container-low": "#f2f4f6",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#855300",
+                        "on-secondary-fixed": "#2a1700",
+                        "inverse-surface": "#2d3133",
+                        "surface": "#f7f9fb",
+                        "primary-container": "#1e3a8a",
+                        "on-surface-variant": "#444651",
+                        "on-secondary": "#ffffff",
+                        "outline": "#757682",
+                        "surface-dim": "#d8dadc",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-tertiary-container": "#4ebdb0",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#ffddb8",
+                        "inverse-primary": "#b6c4ff",
+                        "on-surface": "#191c1e",
+                        "on-tertiary-fixed": "#00201d",
+                        "on-tertiary-fixed-variant": "#005049",
+                        "tertiary-container": "#004942",
+                        "on-primary-fixed-variant": "#264191",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "on-tertiary": "#ffffff",
+                        "primary": "#00236f",
+                        "primary-fixed": "#dce1ff",
+                        "surface-variant": "#e0e3e5",
+                        "on-primary-container": "#90a8ff",
+                        "on-background": "#191c1e",
+                        "background": "#f7f9fb",
+                        "on-primary-fixed": "#00164e",
+                        "surface-bright": "#f7f9fb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "container-max-width": "1280px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "stack-lg": "24px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "32px"
+                    },
+                    "fontFamily": {
+                        "title-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- TopNavBar -->
+<header class="bg-primary dark:bg-primary-container shadow-md fixed top-0 w-full z-50 transition-all duration-300">
+<div class="flex justify-between items-center w-full px-margin-desktop max-w-container-max-width mx-auto h-16">
+<div class="flex items-center gap-4">
+<span class="font-title-md text-title-md font-bold text-on-primary">Pengawas SMA</span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="font-body-md text-body-md text-on-primary/80 hover:text-secondary-fixed transition-colors" href="#">Home</a>
+<a class="font-body-md text-body-md text-on-primary/80 hover:text-secondary-fixed transition-colors" href="#">Profile</a>
+<a class="font-body-md text-body-md text-on-primary/80 hover:text-secondary-fixed transition-colors" href="#">Schools</a>
+<a class="font-body-md text-body-md text-on-primary border-b-2 border-secondary-container pb-1 transition-colors" href="#">News</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="hidden md:block font-label-md text-label-md px-4 py-2 border border-on-primary text-on-primary rounded-lg hover:bg-on-primary/10 transition-colors">Jadwal Supervisi</button>
+<div class="h-8 w-8 rounded-full bg-secondary-fixed flex items-center justify-center text-primary font-bold">A</div>
+</div>
+</div>
+</header>
+<!-- SideNavBar (Left Side) -->
+<aside class="hidden lg:flex flex-col h-screen w-64 fixed left-0 top-16 bg-surface-container-low dark:bg-inverse-surface shadow-sm py-stack-lg z-40">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3 mb-4">
+<img class="h-10 w-10 rounded-full object-cover" data-alt="A professional headshot of a senior male school supervisor wearing a formal batik shirt, with a clean office background, high-key lighting, corporate style, 8k resolution." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcSdXPIFUkTlAKW4ZAmLKRJDx3ZKqXn-Ch1dgTtW5OT2eRszy5ZlcCt3uTShofvSa_J7WlpP3vEvdzfBJQYtl-utIeIdYhp7GPDbvCjB1U14negsk9Omz2Cq84zP0tayn4pdzpwPjLKl2MudI2v6xoYUcuBU_UjaIIYglQtmxvwiihTGbrPdbfxVVFOZy5ImTv1OP2bawoz3GsTIABYWIPFN9Gzse0l4JaYz0W_0zI85kAv4Suxz91">
+<div>
+<h3 class="font-title-md text-label-md font-bold text-primary">Drs. Ahmad M.Pd</h3>
+<p class="text-xs text-on-surface-variant">Senior Supervisor</p>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-label-md hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-sm">add</span>
+                Unggah Laporan
+            </button>
+</div>
+<nav class="flex-grow">
+<ul class="space-y-1">
+<li class="">
+<a class="flex items-center gap-3 text-on-surface-variant pl-4 py-3 hover:bg-surface-container-highest transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">dashboard</span>
+<span class="font-label-md">Dashboard</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-3 text-on-surface-variant pl-4 py-3 hover:bg-surface-container-highest transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">verified_user</span>
+<span class="font-label-md">Verification</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-3 text-primary font-bold border-l-4 border-primary pl-4 py-3 bg-surface-container transition-all translate-x-1" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+<span class="font-label-md">Logbook</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-3 text-on-surface-variant pl-4 py-3 hover:bg-surface-container-highest transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">settings</span>
+<span class="font-label-md">Settings</span>
+</a>
+</li>
+</ul>
+</nav>
+<div class="mt-auto px-4 py-4 space-y-2">
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-2 hover:bg-surface-container-highest rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="text-sm">Help Center</span>
+</a>
+<a class="flex items-center gap-3 text-error px-4 py-2 hover:bg-error-container/20 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="text-sm font-bold">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="lg:ml-64 pt-24 px-margin-mobile md:px-margin-desktop pb-12 max-w-7xl mx-auto">
+<header class="mb-8">
+<h1 class="font-headline-lg text-headline-lg text-primary">Digital Logbook Portal</h1>
+<p class="text-on-surface-variant font-body-md">Log and monitor your school supervision activities with AI-enhanced summaries.</p>
+</header>
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-gutter">
+<!-- Entry Form Section (Left 7 Columns) -->
+<section class="xl:col-span-7 space-y-stack-lg">
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-stack-lg">
+<div class="flex items-center justify-between mb-6">
+<h2 class="font-title-md text-primary flex items-center gap-2">
+<span class="material-symbols-outlined">edit_note</span>
+                            Activity Entry
+                        </h2>
+<span class="text-xs text-on-surface-variant px-2 py-1 bg-surface-container rounded">Form Ref: LOG-2024-001</span>
+</div>
+<form class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<!-- Date Picker -->
+<div class="space-y-1">
+<label class="font-label-sm text-on-surface-variant">Visit Date</label>
+<input class="w-full border-outline text-on-surface rounded-lg focus:ring-2 focus:ring-primary-fixed-dim focus:border-primary px-3 py-2" type="date">
+</div>
+<!-- School Selection -->
+<div class="space-y-1">
+<label class="font-label-sm text-on-surface-variant">Target School</label>
+<select class="w-full border-outline text-on-surface rounded-lg focus:ring-2 focus:ring-primary-fixed-dim focus:border-primary px-3 py-2">
+<option>SMAN 1 Jakarta</option>
+<option>SMAN 8 Jakarta</option>
+<option>SMAS Kanisius</option>
+<option>SMAN 70 Jakarta</option>
+</select>
+</div>
+<!-- Visit Target -->
+<div class="space-y-1">
+<label class="font-label-sm text-on-surface-variant">Visit Target</label>
+<div class="flex flex-wrap gap-2 pt-1">
+<button class="px-3 py-1 text-xs rounded-full border border-primary text-primary bg-primary-fixed hover:bg-primary hover:text-on-primary transition-all" type="button">Headmaster</button>
+<button class="px-3 py-1 text-xs rounded-full border border-outline text-on-surface-variant hover:border-primary hover:text-primary transition-all" type="button">Teachers</button>
+<button class="px-3 py-1 text-xs rounded-full border border-outline text-on-surface-variant hover:border-primary hover:text-primary transition-all" type="button">Staff</button>
+<button class="px-3 py-1 text-xs rounded-full border border-outline text-on-surface-variant hover:border-primary hover:text-primary transition-all" type="button">Students</button>
+</div>
+</div>
+<!-- Focus Category -->
+<div class="space-y-1">
+<label class="font-label-sm text-on-surface-variant">Primary Focus</label>
+<div class="flex flex-wrap gap-2 pt-1">
+<button class="px-3 py-1 text-xs rounded-full border border-tertiary-container text-tertiary hover:bg-tertiary-fixed transition-all" type="button">ARKAS Review</button>
+<button class="px-3 py-1 text-xs rounded-full border border-tertiary-container text-tertiary hover:bg-tertiary-fixed transition-all" type="button">AI Learning Training</button>
+</div>
+</div>
+<!-- Notes Area -->
+<div class="md:col-span-2 space-y-1">
+<label class="font-label-sm text-on-surface-variant">Activity Rough Notes</label>
+<div class="relative">
+<textarea class="w-full border-outline text-on-surface rounded-xl focus:ring-2 focus:ring-primary-fixed-dim focus:border-primary px-4 py-3 custom-scrollbar" id="rough-notes" placeholder="Type or paste your quick field notes here..." rows="4"></textarea>
+<button class="absolute bottom-3 right-3 glass-ai px-4 py-1.5 rounded-full flex items-center gap-2 text-tertiary text-xs font-bold border border-tertiary-fixed-dim hover:bg-tertiary-fixed transition-all" type="button">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                                    Auto-Summary
+                                </button>
+</div>
+</div>
+<!-- Evidence Upload -->
+<div class="md:col-span-2 mt-4">
+<label class="font-label-sm text-on-surface-variant">Evidence &amp; Documentation</label>
+<div class="mt-2 grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="aspect-square border-2 border-dashed border-outline-variant rounded-xl flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-3xl group-hover:scale-110 transition-transform">add_a_photo</span>
+<span class="text-[10px] mt-1">Add Photo</span>
+</div>
+<div class="aspect-square border-2 border-dashed border-outline-variant rounded-xl flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-3xl group-hover:scale-110 transition-transform">upload_file</span>
+<span class="text-[10px] mt-1">Attendance List</span>
+</div>
+</div>
+</div>
+<div class="md:col-span-2 pt-4 flex gap-4">
+<button class="flex-grow bg-primary text-on-primary py-3 rounded-xl font-bold hover:shadow-lg transition-all" type="submit">Submit Logbook Entry</button>
+<button class="px-6 py-3 border border-outline text-on-surface rounded-xl hover:bg-surface-container transition-all" type="button">Save Draft</button>
+</div>
+</form>
+</div>
+<!-- AI Insights Overlay (Appears after interaction) -->
+<div class="ai-sparkle-border rounded-xl p-stack-lg bg-surface-container-lowest">
+<div class="flex items-center gap-3 mb-4">
+<div class="h-10 w-10 bg-gradient-to-br from-tertiary-fixed-dim to-primary rounded-full flex items-center justify-center text-white">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div>
+<h3 class="font-title-md text-primary">AI Recommendations (RTL)</h3>
+<p class="text-xs text-on-surface-variant">Suggested follow-up actions based on your notes.</p>
+</div>
+</div>
+<div class="space-y-3">
+<div class="p-3 bg-surface rounded-lg border-l-4 border-secondary flex gap-3">
+<span class="material-symbols-outlined text-secondary">priority_high</span>
+<p class="text-sm font-body-md">Schedule a specialized workshop for teacher AI literacy within 14 days to address the identified skills gap.</p>
+</div>
+<div class="p-3 bg-surface rounded-lg border-l-4 border-tertiary flex gap-3">
+<span class="material-symbols-outlined text-tertiary">check_circle</span>
+<p class="text-sm font-body-md">Verify ARKAS budget allocation for SMAN 1's laboratory upgrades in the next quarterly review.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats & Reports Section (Right 5 Columns) -->
+<aside class="xl:col-span-5 space-y-stack-lg">
+<!-- Data Counters -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-lowest p-stack-md rounded-xl shadow-sm border border-outline-variant">
+<span class="font-label-sm text-on-surface-variant uppercase">Total Visits</span>
+<div class="flex items-end gap-2 mt-2">
+<span class="font-headline-lg text-headline-lg text-primary">42</span>
+<span class="text-green-600 text-sm mb-2 flex items-center"><span class="material-symbols-outlined text-xs">trending_up</span>+12%</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-stack-md rounded-xl shadow-sm border border-outline-variant">
+<span class="font-label-sm text-on-surface-variant uppercase">Pending RTL</span>
+<div class="flex items-end gap-2 mt-2">
+<span class="font-headline-lg text-headline-lg text-secondary">08</span>
+<span class="text-on-surface-variant text-xs mb-2 italic">Follow-up needed</span>
+</div>
+</div>
+</div>
+<!-- Visits Chart Container -->
+<div class="bg-surface-container-lowest p-stack-lg rounded-xl shadow-sm border border-outline-variant">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-title-md text-on-surface">Visit Statistics</h3>
+<div class="flex gap-2">
+<button class="text-xs bg-surface-container px-2 py-1 rounded">Month</button>
+<button class="text-xs text-on-surface-variant px-2 py-1 hover:bg-surface-container rounded">Year</button>
+</div>
+</div>
+<!-- Placeholder for Chart -->
+<div class="h-48 flex items-end justify-between px-2 pt-4 border-b border-outline-variant">
+<div class="w-8 bg-primary/20 hover:bg-primary transition-all rounded-t" style="height: 40%" title="Jan: 12"></div>
+<div class="w-8 bg-primary/20 hover:bg-primary transition-all rounded-t" style="height: 65%" title="Feb: 18"></div>
+<div class="w-8 bg-primary/20 hover:bg-primary transition-all rounded-t" style="height: 90%" title="Mar: 25"></div>
+<div class="w-8 bg-primary hover:bg-primary transition-all rounded-t shadow-lg" style="height: 100%" title="Apr: 28"></div>
+<div class="w-8 bg-primary/20 hover:bg-primary transition-all rounded-t" style="height: 55%" title="May: 15"></div>
+<div class="w-8 bg-primary/20 hover:bg-primary transition-all rounded-t" style="height: 75%" title="Jun: 21"></div>
+</div>
+<div class="flex justify-between mt-2 px-2">
+<span class="text-[10px] text-on-surface-variant">JAN</span>
+<span class="text-[10px] text-on-surface-variant">FEB</span>
+<span class="text-[10px] text-on-surface-variant">MAR</span>
+<span class="text-[10px] font-bold text-primary">APR</span>
+<span class="text-[10px] text-on-surface-variant">MAY</span>
+<span class="text-[10px] text-on-surface-variant">JUN</span>
+</div>
+</div>
+<!-- Export Controls -->
+<div class="bg-surface-container-lowest p-stack-lg rounded-xl shadow-sm border border-outline-variant">
+    <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-green-600">chat</span>
+            <h3 class="font-title-md text-on-surface">Notification Settings</h3>
+        </div>
+        <div class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" value="" class="sr-only peer" checked="">
+            <div class="w-11 h-6 bg-surface-container rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline-variant after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+        </div>
+    </div>
+    <div class="flex flex-col gap-1">
+        <p class="text-label-md font-bold text-on-surface">WhatsApp Automatic Notifications</p>
+        <p class="text-xs text-on-surface-variant">Status: <span class="text-green-600 font-bold">Active</span></p>
+        <p class="text-[10px] text-on-surface-variant mt-1">Receive instant summaries and RTL reminders via WhatsApp.</p>
+    </div>
+</div><div class="bg-surface-container-lowest p-stack-lg rounded-xl shadow-sm border border-outline-variant">
+<h3 class="font-title-md text-on-surface mb-4">Export Documentation</h3>
+<div class="grid grid-cols-2 gap-3">
+<button class="flex items-center justify-center gap-2 py-3 px-4 bg-surface border border-outline-variant rounded-lg hover:border-error hover:text-error transition-all group">
+<span class="material-symbols-outlined text-outline group-hover:text-error">picture_as_pdf</span>
+<span class="font-label-md">Export PDF</span>
+</button>
+<button class="flex items-center justify-center gap-2 py-3 px-4 bg-surface border border-outline-variant rounded-lg hover:border-green-600 hover:text-green-600 transition-all group">
+<span class="material-symbols-outlined text-outline group-hover:text-green-600">table_view</span>
+<span class="font-label-md">Export Excel</span>
+</button>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-4 text-center">Batch export available for monthly reports.</p>
+</div>
+<!-- Recent Activities Bento -->
+<div class="bg-inverse-surface text-inverse-on-surface p-stack-lg rounded-xl shadow-lg relative overflow-hidden">
+<div class="absolute -right-4 -top-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]">history</span>
+</div>
+<h3 class="font-title-md mb-4 relative z-10">Latest Logged Visits</h3>
+<div class="space-y-4 relative z-10">
+<div class="flex gap-3 items-center">
+<div class="h-2 w-2 rounded-full bg-tertiary-fixed"></div>
+<div class="flex-grow">
+<p class="text-sm font-bold">SMAN 8 Jakarta</p>
+<p class="text-[10px] opacity-70">Focus: AI Curriculum Implementation</p>
+</div>
+<span class="text-[10px] opacity-70">2h ago</span>
+</div>
+<div class="flex gap-3 items-center">
+<div class="h-2 w-2 rounded-full bg-secondary-fixed"></div>
+<div class="flex-grow">
+<p class="text-sm font-bold">SMAS Kanisius</p>
+<p class="text-[10px] opacity-70">Focus: ARKAS Internal Audit</p>
+</div>
+<span class="text-[10px] opacity-70">Yesterday</span>
+</div>
+<button class="w-full text-xs font-bold text-center mt-4 text-secondary-fixed hover:underline transition-all">View All Activity History</button>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-inverse-surface dark:bg-surface-dim border-t border-outline-variant w-full py-stack-lg mt-12">
+<div class="max-w-container-max-width mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-3 gap-gutter text-inverse-on-surface">
+<div>
+<span class="font-title-md text-title-md text-secondary-fixed block mb-2">Pengawas SMA</span>
+<p class="text-sm opacity-80 leading-relaxed font-body-md">Empowering education through digital accountability and AI-driven supervision. Building the future of academic excellence.</p>
+</div>
+<div class="flex flex-col gap-2">
+<h4 class="font-label-sm font-bold uppercase tracking-wider mb-2">Quick Links</h4>
+<a class="text-on-surface-variant hover:text-primary-fixed-dim transition-colors text-sm" href="#">Official Portal</a>
+<a class="text-on-surface-variant hover:text-primary-fixed-dim transition-colors text-sm" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary-fixed-dim transition-colors text-sm" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary-fixed-dim transition-colors text-sm" href="#">Contact Us</a>
+</div>
+<div class="text-right flex flex-col justify-end">
+<p class="text-sm font-body-md mb-1">© 2024 Dinas Pendidikan</p>
+<p class="text-[10px] text-on-surface-variant italic">Professional Supervisor Edition v2.4.1</p>
+</div>
+</div>
+</footer>
+<!-- FAB (Only on Mobile) -->
+<div class="md:hidden fixed bottom-6 right-6">
+<button class="h-14 w-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<!-- Mobile Navigation Bar -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-surface-container shadow-2xl flex justify-around items-center py-3 px-4 z-50 border-t border-outline-variant">
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+<span class="text-[10px] font-bold">Logbook</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">school</span>
+<span class="text-[10px]">Schools</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">equalizer</span>
+<span class="text-[10px]">Stats</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="text-[10px]">Profile</span>
+</div>
+</nav>
+<script>
+        // Micro-interaction for rough notes
+        const textarea = document.getElementById('rough-notes');
+        const autoSummaryBtn = textarea.nextElementSibling;
+
+        autoSummaryBtn.addEventListener('click', () => {
+            const originalText = textarea.value;
+            if(!originalText) return;
+            
+            autoSummaryBtn.innerHTML = `<span class="material-symbols-outlined animate-spin text-sm">sync</span> Processing...`;
+            
+            // Artificial delay to simulate AI processing
+            setTimeout(() => {
+                textarea.value = "SUMMARY: " + originalText.charAt(0).toUpperCase() + originalText.slice(1) + ". Recommended follow-up: verify training module implementation.";
+                autoSummaryBtn.innerHTML = `<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">auto_awesome</span> Auto-Summary`;
+                autoSummaryBtn.classList.add('bg-tertiary-fixed');
+                setTimeout(() => autoSummaryBtn.classList.remove('bg-tertiary-fixed'), 2000);
+            }, 1200);
+        });
+
+        // Toggle focus categories active states
+        const categoryButtons = document.querySelectorAll('.grid button[type="button"]');
+        categoryButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if(btn.closest('.flex-wrap').querySelectorAll('.bg-primary').length > 0 && !btn.classList.contains('bg-primary')){
+                    // Reset if it's a single select context (simulated)
+                }
+                btn.classList.toggle('bg-primary');
+                btn.classList.toggle('text-on-primary');
+            });
+        });
+    </script>
+
+
+</body></html>
