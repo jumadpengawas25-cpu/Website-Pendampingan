@@ -1,5 +1,6 @@
 import { useState } from "react";
 import MaterialSymbol from "../components/MaterialSymbol.jsx";
+import WhatsappPreview from "../components/WhatsappPreview.jsx";
 import { portalInfo, portalCategories, statusMeta } from "../portalData.js";
 import SideNavBar from "../components/portal/SideNavBar.jsx";
 import DocumentCounters from "../components/portal/DocumentCounters.jsx";
@@ -265,8 +266,10 @@ export default function PortalReviewPengawas() {
   const [documents, setDocuments] = useState(reviewDocs);
   const [category] = useState("ksp");
   const [selectedDoc, setSelectedDoc] = useState(null);
+  const [waPreview, setWaPreview] = useState(null);
 
   const handleApprove = (id) => {
+    const doc = documents.find((d) => d.id === id);
     setDocuments((prev) =>
       prev.map((d) =>
         d.id === id
@@ -274,9 +277,19 @@ export default function PortalReviewPengawas() {
           : d
       )
     );
+    if (doc) {
+      setWaPreview({
+        school: portalInfo.school,
+        docType: portalCategories.find((c) => c.id === doc.category)?.label ?? doc.category,
+        status: "verified",
+        reviewerNote: "Disetujui oleh Pengawas",
+        qrLink: "https://verifikasi.example.com/qr/" + doc.id,
+      });
+    }
   };
 
   const handleRevision = (id) => {
+    const doc = documents.find((d) => d.id === id);
     setDocuments((prev) =>
       prev.map((d) =>
         d.id === id
@@ -284,10 +297,29 @@ export default function PortalReviewPengawas() {
           : d
       )
     );
+    if (doc) {
+      setWaPreview({
+        school: portalInfo.school,
+        docType: portalCategories.find((c) => c.id === doc.category)?.label ?? doc.category,
+        status: "revision",
+        reviewerNote: "Mohon perbaikan data",
+        qrLink: "https://verifikasi.example.com/qr/" + doc.id,
+      });
+    }
   };
 
   const handleView = (doc) => {
     setSelectedDoc(doc);
+  };
+
+  const handleCloseWaPreview = () => {
+    setWaPreview(null);
+  };
+
+  const handleSendWa = (message) => {
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/?text=${encodedMessage}`, "_blank");
+    setWaPreview(null);
   };
 
   return (
@@ -404,6 +436,18 @@ export default function PortalReviewPengawas() {
               </div>
             </div>
           </div>
+        )}
+
+        {waPreview && (
+          <WhatsappPreview
+            schoolName={waPreview.school}
+            docType={waPreview.docType}
+            status={waPreview.status}
+            reviewerNote={waPreview.reviewerNote}
+            qrLink={waPreview.qrLink}
+            onClose={handleCloseWaPreview}
+            onSend={handleSendWa}
+          />
         )}
 
         <footer className="mt-stack-lg pt-stack-lg border-t border-outline-variant grid grid-cols-1 md:grid-cols-3 gap-gutter text-on-surface-variant">
