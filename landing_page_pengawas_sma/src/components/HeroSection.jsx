@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "../router.jsx";
 import { supervisor } from "../data.js";
 import StatsOverlay from "./StatsOverlay.jsx";
 
@@ -41,12 +42,18 @@ export default function HeroSection() {
           </p>
 
           <div className="flex flex-wrap gap-stack-md pt-4">
-            <button className="px-8 py-4 bg-secondary-container text-on-secondary-container font-label-md rounded-lg shadow-xl hover:scale-105 transition-transform">
+            <Link
+              to="/portal-sekolah"
+              className="px-8 py-4 bg-secondary-container text-on-secondary-container font-label-md rounded-lg shadow-xl hover:scale-105 transition-transform inline-block text-center"
+            >
               Mulai Pendampingan
-            </button>
-            <button className="px-8 py-4 border border-on-primary/30 text-on-primary font-label-md rounded-lg hover:bg-white/5 transition-colors">
+            </Link>
+            <Link
+              to="/portal-sekolah"
+              className="px-8 py-4 border border-on-primary/30 text-on-primary font-label-md rounded-lg hover:bg-white/5 transition-colors inline-flex items-center justify-center text-center"
+            >
               Lihat Laporan
-            </button>
+            </Link>
           </div>
         </div>
 

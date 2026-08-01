@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { Link } from "../router.jsx";
 import MaterialSymbol from "./MaterialSymbol.jsx";
 import { siteInfo } from "../data.js";
 
@@ -7,6 +8,7 @@ const navLinks = [
   { label: "Profile", href: "#profile" },
   { label: "Schools", href: "#schools" },
   { label: "News", href: "#news" },
+  { label: "Portal Sekolah", href: "/portal-sekolah" },
 ];
 
 export default function Header() {
@@ -15,28 +17,19 @@ export default function Header() {
 
   useEffect(() => {
     const sections = document.querySelectorAll("section[id]");
-
     const handleScroll = () => {
       let current = "";
       sections.forEach((section) => {
-        const sectionTop = section.offsetTop;
-        if (window.pageYOffset >= sectionTop - 150) {
+        if (window.pageYOffset >= section.offsetTop - 150) {
           current = section.getAttribute("id");
         }
       });
-
-      if (current) {
-        setActiveSection(current);
-      }
+      if (current) setActiveSection(current);
     };
-
     window.addEventListener("scroll", handleScroll);
     handleScroll();
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const closeMobile = () => setOpen(false);
 
   return (
     <header className="fixed top-0 z-50 w-full bg-primary dark:bg-primary-container shadow-md">
@@ -54,12 +47,32 @@ export default function Header() {
 
         <div className="hidden md:flex gap-stack-lg items-center">
           {navLinks.map((link) => {
-            const href = link.href;
-            const isActive = activeSection === href.replace("#", "");
+            const isAnchor = link.href.startsWith("#");
+            if (isAnchor) {
+              const isActive = activeSection === link.href.slice(1);
+              return (
+                <a
+                  key={link.href}
+                  className={
+                    isActive
+                      ? "font-body-md text-body-md text-on-primary border-b-2 border-secondary-container pb-1"
+                      : "font-body-md text-body-md text-on-primary/80 hover:text-secondary-fixed transition-colors border-b-2 border-transparent pb-1"
+                  }
+                  href={link.href}
+                >
+                  {link.label}
+                </a>
+              );
+            }
             return (
-              <HeaderLink key={href} href={href} active={isActive}>
+              <Link
+                key={link.href}
+                to={link.href}
+                activeClassName="font-body-md text-body-md text-on-primary border-b-2 border-secondary-container pb-1"
+                className="font-body-md text-body-md text-on-primary/80 hover:text-secondary-fixed transition-colors border-b-2 border-transparent pb-1"
+              >
                 {link.label}
-              </HeaderLink>
+              </Link>
             );
           })}
         </div>
@@ -90,30 +103,17 @@ export default function Header() {
       >
         <div className="flex flex-col gap-2 p-stack-md">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.href}
+              to={link.href}
               className="font-body-md text-body-md text-on-primary hover:text-secondary-fixed transition-colors py-2"
-              href={link.href}
-              onClick={closeMobile}
+              onClick={() => setOpen(false)}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </div>
       </div>
     </header>
-  );
-}
-
-function HeaderLink({ href, active, children }) {
-  const base =
-    "font-body-md text-body-md transition-colors border-b-2 pb-1";
-  const classes = active
-    ? `${base} text-on-primary border-secondary-container`
-    : `${base} text-on-primary/80 hover:text-secondary-fixed border-transparent`;
-  return (
-    <a className={classes} href={href}>
-      {children}
-    </a>
   );
 }
