@@ -44,6 +44,7 @@ export default function LogbookPendampingan() {
     tanggal: "",
   });
   const [formError, setFormError] = useState("");
+  const [notifEnabled, setNotifEnabled] = useState(true);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -123,6 +124,69 @@ export default function LogbookPendampingan() {
             Catat Kunjungan
           </button>
         </header>
+
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-gutter mb-stack-lg">
+          <div className="lg:col-span-2 bg-surface-container-lowest rounded-xl p-stack-lg shadow-sm border border-outline-variant/50">
+            <h3 className="font-title-md text-title-md text-on-surface mb-stack-md">
+              Visit Statistics
+            </h3>
+            <div className="flex items-end justify-between gap-3 h-40 px-2">
+              {[
+                { month: "Jan", count: 4 },
+                { month: "Feb", count: 7 },
+                { month: "Mar", count: 5 },
+                { month: "Apr", count: 8 },
+                { month: "May", count: 6 },
+                { month: "Jun", count: 9 },
+              ].map((item) => (
+                <div
+                  key={item.month}
+                  className="flex flex-col items-center gap-2 flex-1"
+                >
+                  <span className="text-label-sm font-bold text-on-surface">
+                    {item.count}
+                  </span>
+                  <div
+                    className="w-full bg-primary rounded-t-lg transition-all"
+                    style={{ height: `${Math.max((item.count / 10) * 100, 8)}%` }}
+                  />
+                  <span className="text-label-sm text-on-surface-variant">
+                    {item.month}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-surface-container-lowest rounded-xl p-stack-lg shadow-sm border border-outline-variant/50">
+            <h3 className="font-title-md text-title-md text-on-surface mb-stack-md">
+              Notification Settings
+            </h3>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-label-md font-bold text-on-surface">
+                  WhatsApp Automatic Notifications
+                </p>
+                <p className="text-label-sm text-on-surface-variant">
+                  Kirim notifikasi otomatis via WhatsApp
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setNotifEnabled(!notifEnabled)}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  notifEnabled ? "bg-primary" : "bg-outline-variant"
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    notifEnabled ? "translate-x-6" : "translate-x-1"
+                  }`}
+                />
+              </button>
+            </div>
+          </div>
+        </section>
 
         {formOpen && (
           <section className="col-span-8 bg-surface-container-lowest rounded-xl p-stack-lg shadow-sm border border-outline-variant/50 mb-stack-lg">

@@ -14,6 +14,7 @@ const navLinks = [
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
+  const [scheduleOpen, setScheduleOpen] = useState(false);
 
   useEffect(() => {
     const sections = document.querySelectorAll("section[id]");
@@ -78,13 +79,14 @@ export default function Header() {
         </div>
 
         <div className="flex items-center gap-stack-md">
-          <a
+          <button
+            type="button"
             className="hidden md:inline-flex px-4 py-2 bg-secondary-container text-on-secondary-container font-label-md rounded-lg hover:opacity-90 transition-opacity items-center gap-2"
-            href="#"
+            onClick={() => setScheduleOpen(true)}
           >
             <MaterialSymbol icon="calendar_month" className="text-sm" />
             Jadwal Supervisi
-          </a>
+          </button>
           <button
             className="md:hidden text-on-primary"
             aria-label="Toggle navigation"
@@ -114,6 +116,67 @@ export default function Header() {
           ))}
         </div>
       </div>
+
+      {scheduleOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-[60] flex items-center justify-center p-4"
+          onClick={() => setScheduleOpen(false)}
+        >
+          <div
+            className="bg-surface-container-lowest rounded-xl shadow-xl max-w-lg w-full p-stack-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-stack-md">
+              <h3 className="font-title-md text-title-md text-on-surface">
+                Jadwal Supervisi
+              </h3>
+              <button
+                type="button"
+                className="p-1 hover:bg-surface-container-highest rounded"
+                onClick={() => setScheduleOpen(false)}
+              >
+                <MaterialSymbol icon="close" />
+              </button>
+            </div>
+            <div className="space-y-3">
+              <p className="text-body-md text-on-surface-variant">
+                Ringkasan jadwal supervisi akan ditampilkan di sini.
+              </p>
+              <div className="flex items-center gap-3 p-3 bg-surface-container-low rounded-lg">
+                <MaterialSymbol icon="event" className="text-primary" />
+                <div>
+                  <p className="font-label-md font-bold text-on-surface">
+                    Senin, 5 Agustus 2024
+                  </p>
+                  <p className="text-label-sm text-on-surface-variant">
+                    SMA Negeri 1 Jakarta - KOSP
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 bg-surface-container-low rounded-lg">
+                <MaterialSymbol icon="event" className="text-primary" />
+                <div>
+                  <p className="font-label-md font-bold text-on-surface">
+                    Rabu, 7 Agustus 2024
+                  </p>
+                  <p className="text-label-sm text-on-surface-variant">
+                    SMA Negeri 3 Bandung - ARKAS
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-stack-lg flex justify-end">
+              <button
+                type="button"
+                className="px-6 py-2 bg-secondary text-on-secondary rounded-lg font-bold hover:opacity-90 transition-opacity"
+                onClick={() => setScheduleOpen(false)}
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

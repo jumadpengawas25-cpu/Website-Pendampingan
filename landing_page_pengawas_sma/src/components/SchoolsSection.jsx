@@ -1,3 +1,4 @@
+import { Link } from "../router.jsx";
 import MaterialSymbol from "./MaterialSymbol.jsx";
 import { schools } from "../data.js";
 
@@ -54,12 +55,18 @@ function SchoolCard({ school }) {
         </p>
 
         <div className="flex gap-2">
-          <button className="flex-1 py-2 text-xs font-bold border border-outline rounded hover:bg-surface-variant transition-colors">
+          <Link
+            to="/portal-sekolah"
+            className="flex-1 py-2 text-xs font-bold border border-outline rounded hover:bg-surface-variant transition-colors text-center"
+          >
             Profil
-          </button>
-          <button className="flex-1 py-2 text-xs font-bold bg-primary text-on-primary rounded hover:opacity-90">
+          </Link>
+          <Link
+            to="/portal-review"
+            className="flex-1 py-2 text-xs font-bold bg-primary text-on-primary rounded hover:opacity-90 text-center"
+          >
             Laporan
-          </button>
+          </Link>
         </div>
       </div>
     </div>
