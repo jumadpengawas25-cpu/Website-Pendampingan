@@ -5,7 +5,7 @@ import { portalInfo } from "../../portalData.js";
 const navItems = [
   { label: "Dashboard", icon: "dashboard", href: "/" },
   { label: "Verification", icon: "verified_user", href: "#" },
-  { label: "Logbook", icon: "menu_book", href: "#" },
+  { label: "Logbook", icon: "menu_book", href: "/logbook" },
   { label: "Settings", icon: "settings", href: "#" },
 ];
 
