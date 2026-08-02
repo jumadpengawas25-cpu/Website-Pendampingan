@@ -29,9 +29,20 @@ export default function ProfileSection() {
           </div>
 
           <div className="md:w-2/3">
-            <h3 className="font-title-md text-primary mb-stack-md border-l-4 border-secondary pl-4 uppercase tracking-wider">
-              Program Kerja Utama
-            </h3>
+            <div className="mb-stack-lg">
+              <div className="inline-flex items-center gap-2 bg-surface-container-low rounded-full px-3 py-1 mb-4">
+                <MaterialSymbol icon="circle" className="text-secondary text-[10px]" />
+                <span className="text-xs font-label-md text-on-surface-variant">
+                  Komitmen Pengawas Sekolah
+                </span>
+              </div>
+              <h2 className="text-4xl font-bold text-[#2D3748] mb-3">
+                Kami Siap Melayani Sepenuh Hati
+              </h2>
+              <p className="text-base text-on-surface-variant">
+                Mewujudkan transformasi pendidikan melalui pendampingan yang tulus dan profesional untuk memastikan peningkatan mutu yang berkelanjutan
+              </p>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
               {programs.map((program) => (
                 <ProgramCard
