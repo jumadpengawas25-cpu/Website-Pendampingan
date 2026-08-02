@@ -1,4 +1,3 @@
-import TopBar from "./TopBar.jsx";
 import Header from "./Header.jsx";
 import HeroSection from "./HeroSection.jsx";
 import ProfileSection from "./ProfileSection.jsx";
@@ -10,7 +9,6 @@ import Footer from "./Footer.jsx";
 export default function LandingPage() {
   return (
     <>
-      <TopBar />
       <Header />
       <main className="pt-28">
         <HeroSection />

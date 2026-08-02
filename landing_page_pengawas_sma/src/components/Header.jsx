@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "../router.jsx";
 import MaterialSymbol from "./MaterialSymbol.jsx";
+import TopBar from "./TopBar.jsx";
 import { siteInfo, schools } from "../data.js";
 
 const navLinks = [
@@ -184,7 +185,10 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-0 z-40 w-full bg-white shadow-md">
+    <>
+      <div className="fixed top-0 left-0 right-0 z-50">
+        <TopBar />
+        <header className="bg-white shadow-md">
       <nav className="flex justify-between items-center w-full px-margin-desktop max-w-container-max-width mx-auto h-16">
         <Link to="/" className="flex items-center gap-stack-md">
           <img
@@ -629,5 +633,7 @@ export default function Header() {
         </div>
       )}
     </header>
+      </div>
+    </>
   );
 }
