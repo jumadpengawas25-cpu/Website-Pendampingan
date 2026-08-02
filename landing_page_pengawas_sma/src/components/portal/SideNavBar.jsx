@@ -1,15 +1,17 @@
-import { Link } from "../../router.jsx";
+import { Link, useLocation } from "../../router.jsx";
+import { matchRoute } from "../../router.jsx";
 import MaterialSymbol from "../MaterialSymbol.jsx";
 import { portalInfo } from "../../portalData.js";
 
 const navItems = [
   { label: "Dashboard", icon: "dashboard", href: "/" },
-  { label: "Verification", icon: "verified_user", href: "#" },
+  { label: "Verification", icon: "verified_user", href: "/portal-sekolah" },
   { label: "Logbook", icon: "menu_book", href: "/logbook" },
   { label: "Settings", icon: "settings", href: "#" },
 ];
 
 export default function SideNavBar() {
+  const path = useLocation();
   return (
     <aside className="h-screen w-64 fixed left-0 top-0 bg-surface border-r border-outline-variant flex flex-col py-stack-lg z-50">
       <div className="px-stack-lg mb-stack-lg">
@@ -20,7 +22,7 @@ export default function SideNavBar() {
 
       <div className="flex flex-col px-stack-md space-y-2 flex-grow">
         {navItems.map((item) => {
-          const active = item.label === "Verification";
+          const active = item.href !== "#" && matchRoute(item.href, path);
           return (
             <Link
               key={item.label}

@@ -11,7 +11,7 @@ import {
 const LocationContext = createContext("/");
 const NavigateContext = createContext(() => {});
 
-function matchRoute(routePath, locationPath) {
+export function matchRoute(routePath, locationPath) {
   const cleanLoc = locationPath.split("?")[0].split("#")[0] || "/";
   if (!routePath || routePath === "/" || routePath === undefined) {
     return cleanLoc === "/" || cleanLoc === "";
