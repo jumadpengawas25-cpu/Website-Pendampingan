@@ -6,8 +6,8 @@ import { siteInfo, schools } from "../data.js";
 const navLinks = [
   { label: "Home", href: "#hero" },
   { label: "Profile", href: "#profile" },
-  { label: "Schools", href: "#schools" },
-  { label: "News", href: "#news" },
+  { label: "Sekolah", href: "#schools" },
+  { label: "Berita", href: "#news" },
   { label: "Logbook", href: "/logbook" },
   { label: "Portal Sekolah", href: `/portal-sekolah/${schools[0]?.slug}` },
 ];
@@ -184,18 +184,18 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-0 z-50 w-full bg-primary dark:bg-primary-container shadow-md">
-      <nav className="flex justify-between items-center w-full px-margin-desktop max-w-container-max-width mx-auto h-20">
-        <div className="flex items-center gap-stack-md">
+    <header className="fixed top-0 z-40 w-full bg-white shadow-md">
+      <nav className="flex justify-between items-center w-full px-margin-desktop max-w-container-max-width mx-auto h-16">
+        <Link to="/" className="flex items-center gap-stack-md">
           <img
             alt={siteInfo.logoAlt}
-            className="h-12 w-12 object-contain"
+            className="h-9 w-9 object-contain"
             src={siteInfo.logo}
           />
-          <span className="font-title-md text-title-md font-bold text-on-primary">
+          <span className="font-title-md text-title-md font-bold text-primary">
             {siteInfo.name}
           </span>
-        </div>
+        </Link>
 
         <div className="hidden md:flex gap-stack-lg items-center">
           {navLinks.map((link) => {
@@ -205,11 +205,11 @@ export default function Header() {
               return (
                 <a
                   key={link.href}
-                  className={
+                  className={`font-body-md text-body-md transition-colors border-b-2 border-transparent pb-1 ${
                     isActive
-                      ? "font-body-md text-body-md text-on-primary border-b-2 border-secondary-container pb-1"
-                      : "font-body-md text-body-md text-on-primary/80 hover:text-secondary-fixed transition-colors border-b-2 border-transparent pb-1"
-                  }
+                      ? "text-primary border-secondary-container font-semibold"
+                      : "text-on-surface/75 hover:text-primary"
+                  }`}
                   href={link.href}
                 >
                   {link.label}
@@ -220,8 +220,7 @@ export default function Header() {
               <Link
                 key={link.href}
                 to={link.href}
-                activeClassName="font-body-md text-body-md text-on-primary border-b-2 border-secondary-container pb-1"
-                className="font-body-md text-body-md text-on-primary/80 hover:text-secondary-fixed transition-colors border-b-2 border-transparent pb-1"
+                className="font-body-md text-body-md text-on-surface/75 hover:text-primary transition-colors border-b-2 border-transparent pb-1"
               >
                 {link.label}
               </Link>
@@ -232,14 +231,14 @@ export default function Header() {
         <div className="flex items-center gap-stack-md">
           <button
             type="button"
-            className="hidden md:inline-flex px-4 py-2 bg-secondary-container text-on-secondary-container font-label-md rounded-lg hover:opacity-90 transition-opacity items-center gap-2"
+            className="hidden md:inline-flex px-5 py-2.5 bg-secondary-container text-on-secondary-container font-label-md rounded-lg hover:bg-secondary-fixed transition-colors shadow-sm items-center gap-2"
             onClick={openScheduleModal}
           >
             <MaterialSymbol icon="calendar_month" className="text-sm" />
             Jadwal Supervisi
           </button>
           <button
-            className="md:hidden text-on-primary"
+            className="md:hidden text-on-surface"
             aria-label="Toggle navigation"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
@@ -250,21 +249,29 @@ export default function Header() {
       </nav>
 
       <div
-        className={`md:hidden bg-primary dark:bg-primary-container shadow-inner transition-[max-height] duration-300 overflow-hidden ${
+        className={`md:hidden bg-white shadow-inner transition-[max-height] duration-300 overflow-hidden ${
           open ? "max-h-screen" : "max-h-0"
         }`}
       >
-        <div className="flex flex-col gap-2 p-stack-md">
+        <div className="flex flex-col gap-1 p-stack-md">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               to={link.href}
-              className="font-body-md text-body-md text-on-primary hover:text-secondary-fixed transition-colors py-2"
+              className="font-body-md text-body-md text-on-surface hover:text-primary transition-colors py-2.5 px-2 rounded hover:bg-surface-container-low"
               onClick={() => setOpen(false)}
             >
               {link.label}
             </Link>
           ))}
+          <button
+            type="button"
+            className="mt-2 px-5 py-2.5 bg-secondary-container text-on-secondary-container font-label-md rounded-lg hover:bg-secondary-fixed transition-colors flex items-center justify-center gap-2"
+            onClick={openScheduleModal}
+          >
+            <MaterialSymbol icon="calendar_month" className="text-sm" />
+            Jadwal Supervisi
+          </button>
         </div>
       </div>
 

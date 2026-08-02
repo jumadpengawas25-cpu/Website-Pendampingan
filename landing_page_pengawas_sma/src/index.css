@@ -4,7 +4,7 @@
 
 @layer base {
   html {
-    scroll-padding-top: 5rem;
+    scroll-padding-top: 7rem;
   }
   body {
     @apply font-body-md bg-background text-on-background;
@@ -36,4 +36,13 @@
   .status-pending { background-color: #fef3c7; color: #d97706; }
   .status-verified { background-color: #dcfce7; color: #059669; }
   .status-revision { background-color: #fee2e2; color: #dc2626; }
+  @keyframes marquee {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+  }
+  .animate-marquee {
+    animation: marquee 20s linear infinite;
+    display: inline-block;
+    padding-left: 100%;
+  }
 }

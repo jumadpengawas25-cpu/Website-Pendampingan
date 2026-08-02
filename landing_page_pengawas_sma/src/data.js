@@ -241,13 +241,13 @@ export const gallery = [
 export const siteInfo = {
   logo: "https://lh3.googleusercontent.com/aida-public/AB6AXuBpcH0iAagK6HtKMPZPCwjOaGvYwcmABqgLH6KuuNlKCpDFdlPbfSRsz2I0kUZIvDOzpt8nYDmWnNI8XCtDQRE5k08CSFvaIQGiKoUDgp3MurTdSNrt7I06tF59VpzL2PoCwYOql8FNfVFeyhGtAbUK8HKt8eZlPKpuRJTxk5LEeFiAWgGT8eP7PxhaCdzDQxSLGLh8OtHWKz3pW7B-byBYx74F3Q8AAGFdkoVmY4BOxIeaRkTWhx9k",
   logoAlt: "Logo Pengawas SMA",
-  name: "Pengawas SMA",
+  name: "Ruang Jumad",
   tagline:
     "Meningkatkan kualitas pendidikan melalui pendampingan berkelanjutan dan pengawasan berbasis data yang transparan.",
   contact: {
     address: "Dinas Pendidikan Provinsi - Gedung B Lt. 3, Jln. Sudirman Kav 12",
-    phone: "(021) 555-0123",
-    email: "pengawas.sma@diknas.go.id",
+    phone: "0853-3130-4333",
+    email: "jumadpengawas25@gmail.com",
   },
   year: 2024,
 };
