@@ -1,6 +1,8 @@
 import { useState } from "react";
 import MaterialSymbol from "./components/MaterialSymbol.jsx";
 import { portalInfo, initialDocuments } from "./portalData.js";
+import { schools, getSchoolBySlug } from "./data.js";
+import { useParams } from "./router.jsx";
 import SideNavBar from "./components/portal/SideNavBar.jsx";
 import DocumentCounters from "./components/portal/DocumentCounters.jsx";
 import AiInsight from "./components/portal/AiInsight.jsx";
@@ -9,6 +11,12 @@ import UploadForm from "./components/portal/UploadForm.jsx";
 import DocumentTable from "./components/portal/DocumentTable.jsx";
 
 export default function PortalSekolah() {
+  const params = useParams();
+  const school = params.school
+    ? getSchoolBySlug(params.school) ?? schools[0]
+    : schools[0];
+  const schoolName = school ? school.name : portalInfo.school;
+
   const [documents, setDocuments] = useState(initialDocuments);
   const [category, setCategory] = useState("ksp");
 
@@ -24,7 +32,7 @@ export default function PortalSekolah() {
 
   return (
     <>
-      <SideNavBar />
+      <SideNavBar school={school} schoolName={schoolName} />
       <main className="ml-64 p-margin-desktop min-h-screen">
         <header className="flex justify-between items-center mb-stack-lg">
           <div>
@@ -64,7 +72,7 @@ export default function PortalSekolah() {
         <footer className="mt-stack-lg pt-stack-lg border-t border-outline-variant grid grid-cols-1 md:grid-cols-3 gap-gutter text-on-surface-variant">
           <div className="col-span-1">
             <p className="font-title-md text-title-md text-secondary-fixed mb-2">
-              {portalInfo.school}
+              {schoolName}
             </p>
             <p className="text-label-sm">
               Portal manajemen dokumen pendidikan terintegrasi untuk
@@ -77,7 +85,7 @@ export default function PortalSekolah() {
               Panduan ARKAS
             </a>
             <a className="text-label-sm hover:text-primary-fixed-dim transition-colors" href="#">
-              Kebijakan Privasi
+              Kebijatan Privasi
             </a>
             <a className="text-label-sm hover:text-primary-fixed-dim transition-colors" href="#">
               Portal Resmi Kemdikbud

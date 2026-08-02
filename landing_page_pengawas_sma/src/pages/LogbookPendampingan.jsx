@@ -2,11 +2,13 @@ import { useState } from "react";
 import MaterialSymbol from "../components/MaterialSymbol.jsx";
 import SideNavBar from "../components/portal/SideNavBar.jsx";
 import { portalInfo } from "../portalData.js";
+import { schools, getSchoolBySlug } from "../data.js";
+import { useParams } from "../router.jsx";
 
 const initialLogbookEntries = [
   {
     id: "lb1",
-    sekolah: "SMA Negeri 1 Jakarta",
+    sekolah: "SMAN 1 Pagak",
     sasaran: "Kepala Sekolah",
     fokusKegiatan: "Konsultasi Implementasi KOSP",
     rtl: "Pemantauan pelaksanaan KOSP semester depan",
@@ -15,7 +17,7 @@ const initialLogbookEntries = [
   },
   {
     id: "lb2",
-    sekolah: "SMA Negeri 3 Bandung",
+    sekolah: "SMA Muhammadiyah 1 Kepanjen",
     sasaran: "Wakil Kepala Sekolah",
     fokusKegiatan: "Review ARKAS Tahun Anggaran",
     rtl: "Follow-up penyusunan anggaran operasional",
@@ -24,7 +26,7 @@ const initialLogbookEntries = [
   },
   {
     id: "lb3",
-    sekolah: "SMA Negeri 5 Surabaya",
+    sekolah: "SMA Ar Rohmah Putra",
     sasaran: "Guru Pembimbing",
     fokusKegiatan: "Bimbingan AKM Siswa",
     rtl: "Evaluasi hasil AKM dan penyusunan remedial",
@@ -34,6 +36,12 @@ const initialLogbookEntries = [
 ];
 
 export default function LogbookPendampingan() {
+  const params = useParams();
+  const school = params.school
+    ? getSchoolBySlug(params.school) ?? schools[0]
+    : schools[0];
+  const schoolName = school ? school.name : portalInfo.school;
+
   const [entries, setEntries] = useState(initialLogbookEntries);
   const [formOpen, setFormOpen] = useState(false);
   const [form, setForm] = useState({
@@ -104,7 +112,7 @@ export default function LogbookPendampingan() {
 
   return (
     <>
-      <SideNavBar />
+      <SideNavBar school={school} schoolName={schoolName} />
       <main className="ml-64 p-margin-desktop min-h-screen">
         <header className="flex justify-between items-center mb-stack-lg">
           <div>
@@ -212,7 +220,7 @@ export default function LogbookPendampingan() {
                   value={form.sekolah}
                   onChange={handleChange}
                   className="w-full bg-surface-container-low border-outline-variant rounded-lg p-3 text-body-md focus:ring-2 focus:ring-primary focus:border-primary"
-                  placeholder="Contoh: SMA Negeri 1 Jakarta"
+                  placeholder="Contoh: SMA Muhammadiyah 1 Kepanjen"
                   required
                 />
               </div>
@@ -367,7 +375,7 @@ export default function LogbookPendampingan() {
         <footer className="mt-stack-lg pt-stack-lg border-t border-outline-variant grid grid-cols-1 md:grid-cols-3 gap-gutter text-on-surface-variant">
           <div className="col-span-1">
             <p className="font-title-md text-title-md text-secondary-fixed mb-2">
-              {portalInfo.school}
+              {schoolName}
             </p>
             <p className="text-label-sm">
               Portal logbook pendampingan untuk supervisi sekolah binaan.

@@ -56,13 +56,13 @@ function SchoolCard({ school }) {
 
         <div className="flex gap-2">
           <Link
-            to="/portal-sekolah"
+            to={`/portal-sekolah/${school.slug}`}
             className="flex-1 py-2 text-xs font-bold border border-outline rounded hover:bg-surface-variant transition-colors text-center"
           >
             Profil
           </Link>
           <Link
-            to="/portal-review"
+            to={`/portal-review/${school.slug}`}
             className="flex-1 py-2 text-xs font-bold bg-primary text-on-primary rounded hover:opacity-90 text-center"
           >
             Laporan

@@ -8,8 +8,11 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
+      <Route path="/portal-sekolah/:school" element={<PortalSekolah />} />
       <Route path="/portal-sekolah" element={<PortalSekolah />} />
+      <Route path="/portal-review/:school" element={<PortalReviewPengawas />} />
       <Route path="/portal-review" element={<PortalReviewPengawas />} />
+      <Route path="/logbook/:school" element={<LogbookPendampingan />} />
       <Route path="/logbook" element={<LogbookPendampingan />} />
     </Routes>
   );

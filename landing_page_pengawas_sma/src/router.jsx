@@ -10,13 +10,52 @@ import {
 
 const LocationContext = createContext("/");
 const NavigateContext = createContext(() => {});
+const ParamsContext = createContext({});
+
+function cleanLocation(locationPath) {
+  return locationPath.split("?")[0].split("#")[0] || "/";
+}
+
+function getParamNames(routePath) {
+  const names = [];
+  const regex = /:(\w+)/g;
+  let match;
+  while ((match = regex.exec(routePath)) !== null) {
+    names.push(match[1]);
+  }
+  return names;
+}
+
+function routeToRegex(routePath) {
+  const paramNames = getParamNames(routePath);
+  const pattern = routePath.replace(/:(\w+)/g, "([^/]+)");
+  const regex = new RegExp(`^${pattern}$`);
+  return { regex, paramNames };
+}
 
 export function matchRoute(routePath, locationPath) {
-  const cleanLoc = locationPath.split("?")[0].split("#")[0] || "/";
+  const cleanLoc = cleanLocation(locationPath);
   if (!routePath || routePath === "/" || routePath === undefined) {
     return cleanLoc === "/" || cleanLoc === "";
   }
+  if (routePath.includes(":")) {
+    const { regex } = routeToRegex(routePath);
+    return regex.test(cleanLoc);
+  }
   return cleanLoc === routePath;
+}
+
+export function getRouteParams(routePath, locationPath) {
+  const cleanLoc = cleanLocation(locationPath);
+  if (!routePath.includes(":")) return null;
+  const { regex, paramNames } = routeToRegex(routePath);
+  const matchResult = cleanLoc.match(regex);
+  if (!matchResult) return null;
+  const params = {};
+  paramNames.forEach((name, i) => {
+    params[name] = matchResult[i + 1];
+  });
+  return params;
 }
 
 export function Router({ children }) {
@@ -66,6 +105,10 @@ export function useNavigate() {
   return useContext(NavigateContext);
 }
 
+export function useParams() {
+  return useContext(ParamsContext);
+}
+
 export function Link({ to, children, activeClassName = "", ...rest }) {
   const navigate = useNavigate();
   const path = useLocation();
@@ -101,7 +144,12 @@ export function Routes({ children }) {
   for (const child of items) {
     const { path: routePath, element } = child.props;
     if (matchRoute(routePath, path)) {
-      return cloneElement(element, { key: routePath });
+      const params = getRouteParams(routePath, path);
+      return (
+        <ParamsContext.Provider value={params || {}}>
+          {cloneElement(element, { key: routePath })}
+        </ParamsContext.Provider>
+      );
     }
   }
   return null;

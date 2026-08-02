@@ -2,6 +2,8 @@ import { useState } from "react";
 import MaterialSymbol from "../components/MaterialSymbol.jsx";
 import WhatsappPreview from "../components/WhatsappPreview.jsx";
 import { portalInfo, portalCategories, statusMeta } from "../portalData.js";
+import { schools, getSchoolBySlug } from "../data.js";
+import { useParams } from "../router.jsx";
 import SideNavBar from "../components/portal/SideNavBar.jsx";
 import DocumentCounters from "../components/portal/DocumentCounters.jsx";
 import AiInsight from "../components/portal/AiInsight.jsx";
@@ -268,6 +270,12 @@ export default function PortalReviewPengawas() {
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [waPreview, setWaPreview] = useState(null);
 
+  const params = useParams();
+  const school = params.school
+    ? getSchoolBySlug(params.school) ?? schools[0]
+    : schools[0];
+  const schoolName = school ? school.name : portalInfo.school;
+
   const handleApprove = (id) => {
     const doc = documents.find((d) => d.id === id);
     setDocuments((prev) =>
@@ -279,7 +287,7 @@ export default function PortalReviewPengawas() {
     );
     if (doc) {
       setWaPreview({
-        school: portalInfo.school,
+        school: schoolName,
         docType: portalCategories.find((c) => c.id === doc.category)?.label ?? doc.category,
         status: "verified",
         reviewerNote: "Disetujui oleh Pengawas",
@@ -299,7 +307,7 @@ export default function PortalReviewPengawas() {
     );
     if (doc) {
       setWaPreview({
-        school: portalInfo.school,
+        school: schoolName,
         docType: portalCategories.find((c) => c.id === doc.category)?.label ?? doc.category,
         status: "revision",
         reviewerNote: "Mohon perbaikan data",
@@ -324,7 +332,7 @@ export default function PortalReviewPengawas() {
 
   return (
     <>
-      <SideNavBar />
+        <SideNavBar school={school} schoolName={schoolName} />
       <main className="ml-64 p-margin-desktop min-h-screen">
         <header className="flex justify-between items-center mb-stack-lg">
           <div>
@@ -453,7 +461,7 @@ export default function PortalReviewPengawas() {
         <footer className="mt-stack-lg pt-stack-lg border-t border-outline-variant grid grid-cols-1 md:grid-cols-3 gap-gutter text-on-surface-variant">
           <div className="col-span-1">
             <p className="font-title-md text-title-md text-secondary-fixed mb-2">
-              {portalInfo.school}
+              {schoolName}
             </p>
             <p className="text-label-sm">
               Portal review dokumen pendidikan terintegrasi untuk

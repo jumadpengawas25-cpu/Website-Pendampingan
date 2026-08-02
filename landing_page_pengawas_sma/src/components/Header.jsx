@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "../router.jsx";
 import MaterialSymbol from "./MaterialSymbol.jsx";
-import { siteInfo } from "../data.js";
+import { siteInfo, schools } from "../data.js";
 
 const navLinks = [
   { label: "Home", href: "#hero" },
@@ -9,7 +9,7 @@ const navLinks = [
   { label: "Schools", href: "#schools" },
   { label: "News", href: "#news" },
   { label: "Logbook", href: "/logbook" },
-  { label: "Portal Sekolah", href: "/portal-sekolah" },
+  { label: "Portal Sekolah", href: `/portal-sekolah/${schools[0]?.slug}` },
 ];
 
 export default function Header() {
