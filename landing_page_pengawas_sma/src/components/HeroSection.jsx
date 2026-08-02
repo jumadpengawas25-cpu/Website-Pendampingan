@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "../router.jsx";
 import { supervisor } from "../data.js";
+import jumadFotoBaru from "../public/jumad foto baru.png";
 import StatsOverlay from "./StatsOverlay.jsx";
 
 export default function HeroSection() {
@@ -66,9 +67,9 @@ export default function HeroSection() {
         <div className="md:col-span-5 relative">
           <div className="relative w-full aspect-square md:aspect-auto md:h-full rounded-2xl overflow-hidden shadow-2xl border-4 border-white/10 group">
             <img
-              alt="A professional portrait of an Indonesian school supervisor, Drs. Ahmad M.Pd, a middle-aged man with a wise and friendly expression wearing a formal brown batik shirt. He is sitting in a modern, brightly lit office with books and educational awards in the soft-focus background. The lighting is warm and authoritative, reflecting a corporate professional aesthetic with navy blue and gold accents consistent with the brand."
+              alt="Pak Jumad Pengawas SMA"
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              src={supervisor.photo}
+              src={jumadFotoBaru}
             />
             <div className="absolute bottom-0 left-0 right-0 p-stack-lg bg-gradient-to-t from-black/80 to-transparent">
               <p className="text-on-primary font-title-md">{supervisor.name}</p>
