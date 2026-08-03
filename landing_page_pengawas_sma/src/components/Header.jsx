@@ -190,12 +190,12 @@ export default function Header() {
       <div className="fixed top-0 left-0 right-0 z-50">
         <TopBar />
         <header className="bg-white shadow-md">
-      <nav className="flex justify-between items-center w-full px-margin-desktop max-w-container-max-width mx-auto h-16">
+      <nav className="flex justify-between items-center w-full px-6 md:px-8 max-w-container-max-width mx-auto h-20">
         <Link to="/" className="flex items-center">
           <img
             src={logoWebBaru}
             alt="Ruang Jumad - Portal Pengawas SMA Kab. Malang"
-            className="h-12 md:h-14 w-auto object-contain"
+            className="h-16 md:h-20 w-auto object-contain"
           />
         </Link>
 
