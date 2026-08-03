@@ -187,11 +187,10 @@ export default function Header() {
 
   return (
     <>
-      <div className="fixed top-0 left-0 right-0 z-50">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
         <TopBar />
-        <header className="bg-white shadow-md">
-      <nav>
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        <nav>
+          <div className="w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <Link to="/" className="flex items-center">
             <img
               src={logoWebBaru}
@@ -233,7 +232,7 @@ export default function Header() {
           </div>
           <button
             type="button"
-            className="hidden md:inline-flex whitespace-nowrap ml-10 lg:ml-16 px-5 py-2.5 bg-secondary-container text-on-secondary-container font-label-md rounded-lg hover:bg-secondary-fixed transition-colors shadow-sm items-center gap-2"
+            className="hidden md:inline-flex whitespace-nowrap ml-8 px-5 py-2.5 bg-secondary-container text-on-secondary-container font-label-md rounded-lg hover:bg-secondary-fixed transition-colors shadow-sm items-center gap-2"
             onClick={openScheduleModal}
           >
             <MaterialSymbol icon="calendar_month" className="text-sm" />
@@ -632,7 +631,6 @@ export default function Header() {
         </div>
       )}
     </header>
-      </div>
     </>
   );
 }
