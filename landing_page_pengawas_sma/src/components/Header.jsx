@@ -3,7 +3,7 @@ import { Link } from "../router.jsx";
 import MaterialSymbol from "./MaterialSymbol.jsx";
 import TopBar from "./TopBar.jsx";
 import logoWebBaru from "../public/Logo web baru.png";
-import { siteInfo, schools } from "../data.js";
+import { schools } from "../data.js";
 
 const navLinks = [
   { label: "Home", href: "#hero" },
