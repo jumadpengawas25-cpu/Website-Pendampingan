@@ -1,3 +1,5 @@
+import logoWeb from "./public/Logo web baru.png";
+
 export const supervisor = {
   name: "Drs. Ahmad M.Pd",
   title: "Pengawas Madya SMA",
@@ -239,9 +241,10 @@ export const gallery = [
 ];
 
 export const siteInfo = {
-  logo: "https://lh3.googleusercontent.com/aida-public/AB6AXuBpcH0iAagK6HtKMPZPCwjOaGvYwcmABqgLH6KuuNlKCpDFdlPbfSRsz2I0kUZIvDOzpt8nYDmWnNI8XCtDQRE5k08CSFvaIQGiKoUDgp3MurTdSNrt7I06tF59VpzL2PoCwYOql8FNfVFeyhGtAbUK8HKt8eZlPKpuRJTxk5LEeFiAWgGT8eP7PxhaCdzDQxSLGLh8OtHWKz3pW7B-byBYx74F3Q8AAGFdkoVmY4BOxIeaRkTWhx9k",
-  logoAlt: "Logo Pengawas SMA",
-  name: "Ruang Jumad",
+  logo: logoWeb,
+  logoAlt: "Logo RuangJumad",
+  name: "RuangJumad",
+  brandSubtitle: "Portal Pengawas SMA Kab. Malang",
   tagline:
     "Meningkatkan kualitas pendidikan melalui pendampingan berkelanjutan dan pengawasan berbasis data yang transparan.",
   contact: {

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "../router.jsx";
 import MaterialSymbol from "./MaterialSymbol.jsx";
 import TopBar from "./TopBar.jsx";
+import logoWebBaru from "../public/Logo web baru.png";
 import { siteInfo, schools } from "../data.js";
 
 const navLinks = [
@@ -190,15 +191,12 @@ export default function Header() {
         <TopBar />
         <header className="bg-white shadow-md">
       <nav className="flex justify-between items-center w-full px-margin-desktop max-w-container-max-width mx-auto h-16">
-        <Link to="/" className="flex items-center gap-stack-md">
+        <Link to="/" className="flex items-center">
           <img
-            alt={siteInfo.logoAlt}
-            className="h-9 w-9 object-contain"
-            src={siteInfo.logo}
+            src={logoWebBaru}
+            alt="Ruang Jumad - Portal Pengawas SMA Kab. Malang"
+            className="h-12 md:h-14 w-auto object-contain"
           />
-          <span className="font-title-md text-title-md font-bold text-primary">
-            {siteInfo.name}
-          </span>
         </Link>
 
         <div className="hidden md:flex gap-stack-lg items-center">
