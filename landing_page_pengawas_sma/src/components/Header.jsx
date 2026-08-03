@@ -190,50 +190,50 @@ export default function Header() {
       <div className="fixed top-0 left-0 right-0 z-50">
         <TopBar />
         <header className="bg-white shadow-md">
-      <nav className="flex justify-between items-center w-full px-6 md:px-8 max-w-container-max-width mx-auto h-20">
-        <Link to="/" className="flex items-center">
-          <img
-            src={logoWebBaru}
-            alt="Ruang Jumad - Portal Pengawas SMA Kab. Malang"
-            className="h-16 md:h-20 w-auto object-contain"
-          />
-        </Link>
+      <nav>
+        <div className="flex items-center justify-between w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Link to="/" className="flex items-center">
+            <img
+              src={logoWebBaru}
+              alt="Ruang Jumad - Portal Pengawas SMA Kab. Malang"
+              className="h-16 md:h-20 w-auto object-contain"
+            />
+          </Link>
 
-        <div className="hidden md:flex gap-stack-lg items-center">
-          {navLinks.map((link) => {
-            const isAnchor = link.href.startsWith("#");
-            if (isAnchor) {
-              const isActive = activeSection === link.href.slice(1);
+          <div className="flex items-center space-x-2">
+          <div className="hidden md:flex gap-stack-lg items-center">
+            {navLinks.map((link) => {
+              const isAnchor = link.href.startsWith("#");
+              if (isAnchor) {
+                const isActive = activeSection === link.href.slice(1);
+                return (
+                  <a
+                    key={link.href}
+                    className={`font-body-md text-body-md whitespace-nowrap flex-shrink-0 transition-colors border-b-2 border-transparent pb-1 ${
+                      isActive
+                        ? "text-primary border-secondary-container font-semibold"
+                        : "text-on-surface/75 hover:text-primary"
+                    }`}
+                    href={link.href}
+                  >
+                    {link.label}
+                  </a>
+                );
+              }
               return (
-                <a
+                <Link
                   key={link.href}
-                  className={`font-body-md text-body-md transition-colors border-b-2 border-transparent pb-1 ${
-                    isActive
-                      ? "text-primary border-secondary-container font-semibold"
-                      : "text-on-surface/75 hover:text-primary"
-                  }`}
-                  href={link.href}
+                  to={link.href}
+                  className="font-body-md text-body-md whitespace-nowrap flex-shrink-0 text-on-surface/75 hover:text-primary transition-colors border-b-2 border-transparent pb-1"
                 >
                   {link.label}
-                </a>
+                </Link>
               );
-            }
-            return (
-              <Link
-                key={link.href}
-                to={link.href}
-                className="font-body-md text-body-md text-on-surface/75 hover:text-primary transition-colors border-b-2 border-transparent pb-1"
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-        </div>
-
-        <div className="flex items-center gap-stack-md">
+            })}
+          </div>
           <button
             type="button"
-            className="hidden md:inline-flex px-5 py-2.5 bg-secondary-container text-on-secondary-container font-label-md rounded-lg hover:bg-secondary-fixed transition-colors shadow-sm items-center gap-2"
+            className="hidden md:inline-flex whitespace-nowrap ml-10 lg:ml-16 px-5 py-2.5 bg-secondary-container text-on-secondary-container font-label-md rounded-lg hover:bg-secondary-fixed transition-colors shadow-sm items-center gap-2"
             onClick={openScheduleModal}
           >
             <MaterialSymbol icon="calendar_month" className="text-sm" />
@@ -246,7 +246,8 @@ export default function Header() {
             onClick={() => setOpen((v) => !v)}
           >
             <MaterialSymbol icon={open ? "close" : "menu"} />
-          </button>
+            </button>
+          </div>
         </div>
       </nav>
 
