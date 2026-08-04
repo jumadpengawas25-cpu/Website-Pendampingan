@@ -52,7 +52,7 @@ export const schools = [
     accreditation: { text: "Akreditasi A", class: "bg-green-100 text-green-700" },
     accent: "bg-primary",
     logo:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuDBqL6B6-KsJengR43KA82mvx-W4rOnvh6mtzfwwUKcWvkceap1M5mSbkPtwpXHqF7UzusSoIYBxFFNv0FdRiMGW0BxylWmNDiOCotQ-LB-yqWjcY3-If5RvZv5bbkgkGxX37HnTh107lQjbt14IZj3089ebrk_UKmGTwrg1xXGFOomK-86C-lUb5_3KNVb7gk-l80M7NZybFEaTywkMIHPemuoUO4_gFSJ-FAeThL0FQADO-oZZ6ip",
+      "/src/public/sekolah/Logo SMAN 1 Pagak.jpg",
     logoAlt: "Official logo of SMAN 1 Pagak, featuring a classic academic crest with educational symbols like an open book and a torch, rendered in traditional navy blue and gold colors on a clean white background.",
   },
   {
@@ -64,7 +64,7 @@ export const schools = [
     accreditation: { text: "Akreditasi B", class: "bg-amber-100 text-amber-700" },
     accent: "bg-secondary-container",
     logo:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuAMZSjK-Xpvqxwsbh92x8YD-fEyVmMR-dOlrGAUT501VPDGUjqXRXwWe1SWNy_uIVmbw3XxXNRRhKqzWQXjcRV5GuspGrV8lQiGmDJqEzE7umV_0lNdZhdeg_3eKoeTrKOdpH_T3hkpJWF4Mq1DOVm3YSr6FPTTj5xAYyyQpcOaOKslK1qy9oL6iwr1Tn91Zr1987UirXeCHwH7J8BAhcgaVMqlDvj9UzdgTVlpban8e1v4paG1f3um",
+      "/src/public/sekolah/Logo SMA Muhammadiyah 1 Kepanjen.jpg",
     logoAlt: "Official school logo for SMA Muhammadiyah 1 Kepanjen, minimalist and modern design with a blue geometric abstract shield and a rising sun symbol, clean white background, professional vector aesthetic.",
   },
   {
@@ -76,7 +76,7 @@ export const schools = [
     accreditation: { text: "Akreditasi A", class: "bg-green-100 text-green-700" },
     accent: "bg-primary-fixed",
     logo:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCztYfBLeiC92mX2vOTCyUtlpWCh5bvkqON0lLyXTMxjFI4LmRC5JveXP10Jm0gKAz3t9AWdYe71U1H86ejdqcZ0GF9KQqpv47PiwR-Yi6VcPHGhqqNb-7Dwj8XhmlkcZ2xoOG1mrWN80uei_QYNjjAFWoZr4INVrhJZmSwwfnOARFwrUsS6qzgBnY0wNqr9fLnS52KFfZk8I544fmK2bTYYUV7M11hJcSCS05iNwQ4V3A_iTBW4LIn",
+      "/src/public/sekolah/Logo SMA Ar Rohmah Putra.jpg",
     logoAlt: "Traditional school crest for SMA Ar Rohmah Putra, featuring an ornate shield with historical symbols and a ribbon banner, classic red and gold color palette, official and prestigious appearance.",
   },
   {
@@ -88,7 +88,7 @@ export const schools = [
     accreditation: { text: "Akreditasi B", class: "bg-amber-100 text-amber-700" },
     accent: "bg-error",
     logo:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuA8mMSZH8zybTxMNC6PjeCbDiwwTx3TGkgsrVh8m8LepG7U_u2xRizKYHPSJo-9YxMlqlPCj_Z64KtZSYbhZfPomCVp3q2tpkqXo-vVwE8Vw5aotkdC_sOYGqPq6TsEgkzb16m-2v8hw8N0c5CfXnyQNf-kNZ-jYD5o6cB8z6NdgMeTjA4Pz876BbMtRPy83vS5a2XlNFO0_O0oqcW6LxVrtiZTlzIX7WCIa60ztJjF5SWop0P6D47W",
+      "/src/public/sekolah/Logo SMA Mamba`unur Bululawang.jpg",
     logoAlt: "Modern high school emblem for SMA Mamba'unnur Bululawang, incorporating a stylized book and a soaring eagle, vibrant blue and white color scheme, corporate educational style.",
   },
   {
@@ -100,7 +100,7 @@ export const schools = [
     accreditation: { text: "Akreditasi A", class: "bg-green-100 text-green-700" },
     accent: "bg-primary",
     logo:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuDBqL6B6-KsJengR43KA82mvx-W4rOnvh6mtzfwwUKcWvkceap1M5mSbkPtwpXHqF7UzusSoIYBxFFNv0FdRiMGW0BxylWmNDiOCotQ-LB-yqWjcY3-If5RvZv5bbkgkGxX37HnTh107lQjbt14IZj3089ebrk_UKmGTwrg1xXGFOomK-86C-lUb5_3KNVb7gk-l80M7NZybFEaTywkMIHPemuoUO4_gFSJ-FAeThL0FQADO-oZZ6ip",
+      "/src/public/sekolah/Logo SMA Islam Al Hikmah Bululawang.jpg",
     logoAlt: "Official logo of SMA Islam Al Hikmah Bululawang, featuring a classic academic crest with educational symbols like an open book and a torch, rendered in traditional navy blue and gold colors on a clean white background.",
   },
   {
@@ -112,7 +112,7 @@ export const schools = [
     accreditation: { text: "Akreditasi B", class: "bg-amber-100 text-amber-700" },
     accent: "bg-secondary-container",
     logo:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuAMZSjK-Xpvqxwsbh92x8YD-fEyVmMR-dOlrGAUT501VPDGUjqXRXwWe1SWNy_uIVmbw3XxXNRRhKqzWQXjcRV5GuspGrV8lQiGmDJqEzE7umV_0lNdZhdeg_3eKoeTrKOdpH_T3hkpJWF4Mq1DOVm3YSr6FPTTj5xAYyyQpcOaOKslK1qy9oL6iwr1Tn91Zr1987UirXeCHwH7J8BAhcgaVMqlDvj9UzdgTVlpban8e1v4paG1f3um",
+      "/src/public/sekolah/Logo SMA Al Munawariyah Bululawang.jpg",
     logoAlt: "Official school logo for SMA Al Munawwariyyah Bululawang, minimalist and modern design with a blue geometric abstract shield and a rising sun symbol, clean white background, professional vector aesthetic.",
   },
   {
@@ -123,7 +123,7 @@ export const schools = [
     accreditation: { text: "Akreditasi B", class: "bg-amber-100 text-amber-700" },
     accent: "bg-primary-fixed",
     logo:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCztYfBLeiC92mX2vOTCyUtlpWCh5bvkqON0lLyXTMxjFI4LmRC5JveXP10Jm0gKAz3t9AWdYe71U1H86ejdqcZ0GF9KQqpv47PiwR-Yi6VcPHGhqqNb-7Dwj8XhmlkcZ2xoOG1mrWN80uei_QYNjjAFWoZr4INVrhJZmSwwfnOARFwrUsS6qzgBnY0wNqr9fLnS52KFfZk8I544fmK2bTYYUV7M11hJcSCS05iNwQ4V3A_iTBW4LIn",
+      "/src/public/sekolah/Logo SMA Mahaputra Ampelgading.jpg",
     logoAlt: "Traditional school crest for SMA Mahaputra Ampelgading, featuring an ornate shield with historical symbols and a ribbon banner, classic red and gold color palette, official and prestigious appearance.",
   },
   {
@@ -135,7 +135,7 @@ export const schools = [
     accreditation: { text: "Akreditasi C", class: "bg-red-100 text-red-700" },
     accent: "bg-error",
     logo:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuA8mMSZH8zybTxMNC6PjeCbDiwwTx3TGkgsrVh8m8LepG7U_u2xRizKYHPSJo-9YxMlqlPCj_Z64KtZSYbhZfPomCVp3q2tpkqXo-vVwE8Vw5aotkdC_sOYGqPq6TsEgkzb16m-2v8hw8N0c5CfXnyQNf-kNZ-jYD5o6cB8z6NdgMeTjA4Pz876BbMtRPy83vS5a2XlNFO0_O0oqcW6LxVrtiZTlzIX7WCIa60ztJjF5SWop0P6D47W",
+      "/src/public/sekolah/Logo SMA Ampelgading.jpg",
     logoAlt: "Modern high school emblem for SMA Ampelgading, incorporating a stylized book and a soaring eagle, vibrant blue and white color scheme, corporate educational style.",
   },
   {
@@ -146,7 +146,7 @@ export const schools = [
     accreditation: { text: "Akreditasi B", class: "bg-amber-100 text-amber-700" },
     accent: "bg-primary",
     logo:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuDBqL6B6-KsJengR43KA82mvx-W4rOnvh6mtzfwwUKcWvkceap1M5mSbkPtwpXHqF7UzusSoIYBxFFNv0FdRiMGW0BxylWmNDiOCotQ-LB-yqWjcY3-If5RvZv5bbkgkGxX37HnTh107lQjbt14IZj3089ebrk_UKmGTwrg1xXGFOomK-86C-lUb5_3KNVb7gk-l80M7NZybFEaTywkMIHPemuoUO4_gFSJ-FAeThL0FQADO-oZZ6ip",
+      "/src/public/sekolah/Logo SMA YBPK Pujiharjo Tirtoyudo.jpg",
     logoAlt: "Official logo of SMA YBPK Pujiharjo Tirtoyudo, featuring a classic academic crest with educational symbols like an open book and a torch, rendered in traditional navy blue and gold colors on a clean white background.",
   },
 ];
