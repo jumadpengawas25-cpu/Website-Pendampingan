@@ -6,11 +6,16 @@ export default function SchoolsSection() {
   return (
     <section className="bg-slate-900/90 backdrop-blur-md py-12 px-4 sm:px-6 lg:px-8" id="schools">
       <div className="max-w-container-max-width mx-auto">
-        <div className="flex justify-between items-end mb-stack-lg">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <h2 className="font-headline-lg text-white font-bold">SMA Binaan</h2>
-            <p className="text-blue-200">
-              Daftar satuan pendidikan dalam lingkup supervisi aktif.
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-400 text-xs font-medium tracking-wide uppercase mb-3">
+              ● SATUAN PENDIDIKAN BINAAN
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+              Daftar SMA Binaan & Ekosistem Supervisi
+            </h2>
+            <p className="text-blue-200/80 text-sm sm:text-base max-w-2xl">
+              Portofolio digital, profil, serta pelaporan capaian mutu dari seluruh Sekolah Menengah Atas di wilayah supervisi aktif Cabang Dinas Pendidikan Kabupaten Malang.
             </p>
           </div>
           <button className="flex items-center gap-2 text-blue-300 hover:text-white">
