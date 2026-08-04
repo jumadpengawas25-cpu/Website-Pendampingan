@@ -3,11 +3,13 @@ import MaterialSymbol from "../components/MaterialSymbol.jsx";
 import WhatsappPreview from "../components/WhatsappPreview.jsx";
 import { portalInfo, portalCategories, statusMeta } from "../portalData.js";
 import { schools, getSchoolBySlug } from "../data.js";
-import { useParams } from "../router.jsx";
+import { useParams, useNavigate } from "../router.jsx";
 import SideNavBar from "../components/portal/SideNavBar.jsx";
 import DocumentCounters from "../components/portal/DocumentCounters.jsx";
 import AiInsight from "../components/portal/AiInsight.jsx";
 import RecentActivity from "../components/portal/RecentActivity.jsx";
+import LoginPortalSekolah from "../components/portal/LoginPortalSekolah.jsx";
+import { usePortalAuth } from "../hooks/usePortalAuth.js";
 
 const reviewDocs = [
   {
@@ -271,10 +273,23 @@ export default function PortalReviewPengawas() {
   const [waPreview, setWaPreview] = useState(null);
 
   const params = useParams();
-  const school = params.school
-    ? getSchoolBySlug(params.school) ?? schools[0]
-    : schools[0];
+  const navigate = useNavigate();
+  const { isLoggedIn, session } = usePortalAuth();
+
+  const schoolSlug = params.school
+    ? getSchoolBySlug(params.school)?.slug ?? schools[0]?.slug
+    : schools[0]?.slug;
+  const school = schoolSlug ? getSchoolBySlug(schoolSlug) ?? schools[0] : schools[0];
   const schoolName = school ? school.name : portalInfo.school;
+
+  if (!isLoggedIn) {
+    return <LoginPortalSekolah schoolSlug={schoolSlug} />;
+  }
+
+  if (session?.schoolSlug && session.schoolSlug !== schoolSlug) {
+    navigate("/login-portal");
+    return null;
+  }
 
   const handleApprove = (id) => {
     const doc = documents.find((d) => d.id === id);

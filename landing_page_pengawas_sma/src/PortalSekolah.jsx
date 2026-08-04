@@ -2,23 +2,44 @@ import { useState } from "react";
 import MaterialSymbol from "./components/MaterialSymbol.jsx";
 import { portalInfo, initialDocuments } from "./portalData.js";
 import { schools, getSchoolBySlug } from "./data.js";
-import { useParams } from "./router.jsx";
+import { sekolahCredentials } from "./data/sekolah.js";
+import { useParams, useNavigate } from "./router.jsx";
 import SideNavBar from "./components/portal/SideNavBar.jsx";
 import DocumentCounters from "./components/portal/DocumentCounters.jsx";
 import AiInsight from "./components/portal/AiInsight.jsx";
 import RecentActivity from "./components/portal/RecentActivity.jsx";
 import UploadForm from "./components/portal/UploadForm.jsx";
 import DocumentTable from "./components/portal/DocumentTable.jsx";
+import LoginPortalSekolah from "./components/portal/LoginPortalSekolah.jsx";
+import { usePortalAuth } from "./hooks/usePortalAuth.js";
 
 export default function PortalSekolah() {
   const params = useParams();
-  const school = params.school
-    ? getSchoolBySlug(params.school) ?? schools[0]
-    : schools[0];
+  const navigate = useNavigate();
+  const { isLoggedIn, logout, session } = usePortalAuth();
+
+  const schoolSlug = params.school
+    ? getSchoolBySlug(params.school)?.slug ?? schools[0]?.slug
+    : schools[0]?.slug;
+  const school = schoolSlug ? getSchoolBySlug(schoolSlug) ?? schools[0] : schools[0];
   const schoolName = school ? school.name : portalInfo.school;
 
   const [documents, setDocuments] = useState(initialDocuments);
   const [category, setCategory] = useState("ksp");
+
+  if (!isLoggedIn) {
+    return <LoginPortalSekolah schoolSlug={schoolSlug} />;
+  }
+
+  if (session?.schoolSlug && session.schoolSlug !== schoolSlug) {
+    navigate("/login-portal");
+    return null;
+  }
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   const handleCategoryChange = (e) => setCategory(e.target.value);
 
@@ -29,6 +50,10 @@ export default function PortalSekolah() {
   const handleDelete = (id) => {
     setDocuments((prev) => prev.filter((d) => d.id !== id));
   };
+
+  const credential = sekolahCredentials.find(
+    (c) => c.schoolSlug === schoolSlug
+  );
 
   return (
     <>
@@ -52,6 +77,32 @@ export default function PortalSekolah() {
             <span className="text-label-md font-bold">{portalInfo.semester}</span>
           </div>
         </header>
+
+        <div className="bg-surface-container-low rounded-xl border border-outline-variant p-4 mb-stack-lg flex items-center gap-4">
+          <div className="w-12 h-12 bg-surface-container-highest rounded-lg flex items-center justify-center flex-shrink-0">
+            <img
+              alt={school.logoAlt}
+              className="w-8 h-8 object-contain"
+              src={school.logo}
+            />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-title-md text-title-md text-on-surface truncate">
+              {schoolName}
+            </h3>
+            <p className="text-label-sm text-on-surface-variant">
+              NPSN: {credential?.npsn ?? "-"}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="flex items-center gap-2 px-4 py-2 bg-error text-on-error rounded-lg font-label-md font-bold hover:opacity-90 transition-opacity"
+          >
+            <MaterialSymbol icon="logout" />
+            Keluar
+          </button>
+        </div>
 
         <DocumentCounters documents={documents} />
 

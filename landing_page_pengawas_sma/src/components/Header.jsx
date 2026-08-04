@@ -3,7 +3,6 @@ import { Link } from "../router.jsx";
 import MaterialSymbol from "./MaterialSymbol.jsx";
 import TopBar from "./TopBar.jsx";
 import logoWebBaru from "../public/Logo web baru.png";
-import { schools } from "../data.js";
 
 const navLinks = [
   { label: "Home", href: "#hero" },
@@ -11,7 +10,7 @@ const navLinks = [
   { label: "Sekolah", href: "#schools" },
   { label: "Berita", href: "#news" },
   { label: "Logbook", href: "/logbook" },
-  { label: "Portal Sekolah", href: `/portal-sekolah/${schools[0]?.slug}` },
+  { label: "Portal Sekolah", href: `/login-portal` },
 ];
 
 export default function Header() {
