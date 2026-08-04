@@ -5,16 +5,18 @@ export default function ProfileSection() {
   return (
     <section className="py-stack-lg bg-surface relative" id="profile">
       <div className="max-w-container-max-width mx-auto px-margin-desktop">
-        <div className="flex flex-col md:flex-row gap-gutter items-start">
-          <div className="md:w-1/3">
-            <div className="sticky top-28 p-stack-lg bg-white rounded-xl shadow-sm border border-outline-variant">
-              <h2 className="font-headline-lg text-primary mb-stack-md">
-                Sambutan Pengawas
-              </h2>
-              <p className="text-on-surface-variant italic mb-stack-lg">
-                {`"${supervisor.quote}"`}
-              </p>
-              <div className="space-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          <div className="lg:col-span-4 flex flex-col">
+            <div className="bg-white rounded-xl border border-slate-200/80 p-6 sm:p-8 h-full flex flex-col justify-between shadow-sm">
+              <div>
+                <h2 className="font-headline-lg text-primary mb-stack-md">
+                  Sambutan Pengawas
+                </h2>
+                <p className="text-on-surface-variant italic mb-stack-lg">
+                  {`"${supervisor.quote}"`}
+                </p>
+              </div>
+              <div className="mt-auto space-y-4 pt-6 border-t border-slate-100">
                 {supervisor.education.map((item, i) => (
                   <div className="flex items-center gap-3" key={i}>
                     <MaterialSymbol icon={item.icon} className="text-secondary" />
@@ -28,7 +30,7 @@ export default function ProfileSection() {
             </div>
           </div>
 
-          <div className="md:w-2/3">
+          <div className="lg:col-span-8 flex flex-col justify-between">
             <div className="mb-stack-lg">
               <div className="inline-flex items-center gap-2 bg-surface-container-low rounded-full px-3 py-1 mb-4">
                 <MaterialSymbol icon="circle" className="text-secondary text-[10px]" />
