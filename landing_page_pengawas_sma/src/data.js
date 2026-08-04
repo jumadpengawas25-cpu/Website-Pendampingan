@@ -52,7 +52,7 @@ export const schools = [
     accreditation: { text: "Akreditasi A", class: "bg-green-100 text-green-700" },
     accent: "bg-primary",
     logo:
-      "/src/public/sekolah/Logo SMAN 1 Pagak.jpg",
+      "/src/public/sekolah/pagak.png",
     logoAlt: "Official logo of SMAN 1 Pagak, featuring a classic academic crest with educational symbols like an open book and a torch, rendered in traditional navy blue and gold colors on a clean white background.",
   },
   {
@@ -64,7 +64,7 @@ export const schools = [
     accreditation: { text: "Akreditasi B", class: "bg-amber-100 text-amber-700" },
     accent: "bg-secondary-container",
     logo:
-      "/src/public/sekolah/Logo SMA Muhammadiyah 1 Kepanjen.jpg",
+      "/src/public/sekolah/muhammadiyah.png",
     logoAlt: "Official school logo for SMA Muhammadiyah 1 Kepanjen, minimalist and modern design with a blue geometric abstract shield and a rising sun symbol, clean white background, professional vector aesthetic.",
   },
   {
@@ -76,7 +76,7 @@ export const schools = [
     accreditation: { text: "Akreditasi A", class: "bg-green-100 text-green-700" },
     accent: "bg-primary-fixed",
     logo:
-      "/src/public/sekolah/Logo SMA Ar Rohmah Putra.jpg",
+      "/src/public/sekolah/arrohmah.png",
     logoAlt: "Traditional school crest for SMA Ar Rohmah Putra, featuring an ornate shield with historical symbols and a ribbon banner, classic red and gold color palette, official and prestigious appearance.",
   },
   {
@@ -88,7 +88,7 @@ export const schools = [
     accreditation: { text: "Akreditasi B", class: "bg-amber-100 text-amber-700" },
     accent: "bg-error",
     logo:
-      "/src/public/sekolah/Logo SMA Mamba`unur Bululawang.jpg",
+      "/src/public/sekolah/mamba`unnur.png",
     logoAlt: "Modern high school emblem for SMA Mamba'unnur Bululawang, incorporating a stylized book and a soaring eagle, vibrant blue and white color scheme, corporate educational style.",
   },
   {
@@ -100,7 +100,7 @@ export const schools = [
     accreditation: { text: "Akreditasi A", class: "bg-green-100 text-green-700" },
     accent: "bg-primary",
     logo:
-      "/src/public/sekolah/Logo SMA Islam Al Hikmah Bululawang.jpg",
+      "/src/public/sekolah/alhikmah.png",
     logoAlt: "Official logo of SMA Islam Al Hikmah Bululawang, featuring a classic academic crest with educational symbols like an open book and a torch, rendered in traditional navy blue and gold colors on a clean white background.",
   },
   {
@@ -112,7 +112,7 @@ export const schools = [
     accreditation: { text: "Akreditasi B", class: "bg-amber-100 text-amber-700" },
     accent: "bg-secondary-container",
     logo:
-      "/src/public/sekolah/Logo SMA Al Munawariyah Bululawang.jpg",
+      "/src/public/sekolah/almun.png",
     logoAlt: "Official school logo for SMA Al Munawwariyyah Bululawang, minimalist and modern design with a blue geometric abstract shield and a rising sun symbol, clean white background, professional vector aesthetic.",
   },
   {
@@ -123,7 +123,7 @@ export const schools = [
     accreditation: { text: "Akreditasi B", class: "bg-amber-100 text-amber-700" },
     accent: "bg-primary-fixed",
     logo:
-      "/src/public/sekolah/Logo SMA Mahaputra Ampelgading.jpg",
+      "/src/public/sekolah/mahaputra.png",
     logoAlt: "Traditional school crest for SMA Mahaputra Ampelgading, featuring an ornate shield with historical symbols and a ribbon banner, classic red and gold color palette, official and prestigious appearance.",
   },
   {
@@ -135,7 +135,7 @@ export const schools = [
     accreditation: { text: "Akreditasi C", class: "bg-red-100 text-red-700" },
     accent: "bg-error",
     logo:
-      "/src/public/sekolah/Logo SMA Ampelgading.jpg",
+      "/src/public/sekolah/ampelgading.png",
     logoAlt: "Modern high school emblem for SMA Ampelgading, incorporating a stylized book and a soaring eagle, vibrant blue and white color scheme, corporate educational style.",
   },
   {
@@ -146,7 +146,7 @@ export const schools = [
     accreditation: { text: "Akreditasi B", class: "bg-amber-100 text-amber-700" },
     accent: "bg-primary",
     logo:
-      "/src/public/sekolah/Logo SMA YBPK Pujiharjo Tirtoyudo.jpg",
+      "/src/public/sekolah/ybpk.png",
     logoAlt: "Official logo of SMA YBPK Pujiharjo Tirtoyudo, featuring a classic academic crest with educational symbols like an open book and a torch, rendered in traditional navy blue and gold colors on a clean white background.",
   },
 ];
