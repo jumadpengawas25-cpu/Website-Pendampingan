@@ -7,6 +7,7 @@ const MAX_MB = 10;
 export default function UploadForm({ category, onCategoryChange, onAddDocument }) {
   const [title, setTitle] = useState("");
   const [fileName, setFileName] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
   const [fileError, setFileError] = useState("");
   const fileInputRef = useRef(null);
 
@@ -24,7 +25,13 @@ export default function UploadForm({ category, onCategoryChange, onAddDocument }
   const handleFile = (file) => {
     const err = validateFile(file);
     setFileError(err);
-    setFileName(err ? "" : file.name);
+    if (err) {
+      setFileName("");
+      setSelectedFile(null);
+    } else {
+      setFileName(file.name);
+      setSelectedFile(file);
+    }
   };
 
   const handleDrop = useCallback(
@@ -33,7 +40,7 @@ export default function UploadForm({ category, onCategoryChange, onAddDocument }
       const file = e.dataTransfer.files?.[0];
       if (file) handleFile(file);
     },
-    [setFileError, setFileName]
+    [setFileError, setFileName, setSelectedFile]
   );
 
   const handleSubmit = (e) => {
@@ -57,9 +64,11 @@ export default function UploadForm({ category, onCategoryChange, onAddDocument }
         year: "numeric",
       }),
       status: "draft",
+      fileUrl: URL.createObjectURL(selectedFile),
     });
     setTitle("");
     setFileName("");
+    setSelectedFile(null);
     setFileError("");
   };
 
@@ -157,18 +166,21 @@ export default function UploadForm({ category, onCategoryChange, onAddDocument }
             onClick={() => {
               setTitle("");
               setFileName("");
+              setSelectedFile(null);
               setFileError("");
             }}
           >
             Batalkan
           </button>
-          <button
-            type="submit"
-            className="px-8 py-3 bg-secondary text-on-secondary rounded-lg font-bold shadow-md hover:opacity-90 transition-all"
-            disabled={!title.trim() || !fileName}
-          >
-            Kirim Dokumen
-          </button>
+          {selectedFile !== null && (
+            <button
+              type="submit"
+              className="px-8 py-3 bg-secondary text-on-secondary rounded-lg font-bold shadow-md hover:opacity-90 transition-all"
+              disabled={!title.trim()}
+            >
+              Kirim Dokumen
+            </button>
+          )}
         </div>
       </form>
     </section>

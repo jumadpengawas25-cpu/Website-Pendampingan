@@ -1,7 +1,9 @@
+import { useState } from "react";
 import MaterialSymbol from "../MaterialSymbol.jsx";
 import { statusMeta } from "../../portalData.js";
 
 export default function DocumentTable({ documents, onDelete }) {
+  const [previewDoc, setPreviewDoc] = useState(null);
   const rows = documents.length
     ? documents
     : [
@@ -118,6 +120,7 @@ export default function DocumentTable({ documents, onDelete }) {
                     <DocumentActions
                       doc={doc}
                       onDelete={onDelete}
+                      onPreview={setPreviewDoc}
                     />
                   </td>
                 </tr>
@@ -146,6 +149,58 @@ export default function DocumentTable({ documents, onDelete }) {
           </button>
         </div>
       </div>
+
+      {previewDoc && (
+        <div
+          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center"
+          onClick={() => setPreviewDoc(null)}
+        >
+          <div
+            className="bg-surface-container-lowest rounded-xl border border-outline-variant w-full max-w-4xl h-[80vh] flex flex-col shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between p-stack-lg border-b border-outline-variant/30">
+              <div>
+                <h3 className="font-title-md text-title-md text-on-surface">
+                  {previewDoc.title}
+                </h3>
+                <span className={`status-pill ${statusMeta[previewDoc.status]?.class}`}>
+                  {statusMeta[previewDoc.status]?.label}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setPreviewDoc(null)}
+                className="p-2 hover:bg-surface-container-highest rounded-lg"
+              >
+                <MaterialSymbol icon="close" />
+              </button>
+            </div>
+            <div className="flex-1 min-h-0">
+              {previewDoc.fileUrl ? (
+                <iframe
+                  src={previewDoc.fileUrl}
+                  className="w-full h-full border-0"
+                  title={previewDoc.title}
+                />
+              ) : (
+                <div className="flex items-center justify-center h-full text-on-surface-variant">
+                  <p>Preview tidak tersedia</p>
+                </div>
+              )}
+            </div>
+            <div className="p-stack-md border-t border-outline-variant/30 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setPreviewDoc(null)}
+                className="px-6 py-3 border border-outline-variant rounded-lg font-bold text-on-surface-variant hover:bg-surface-container-highest"
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
@@ -161,7 +216,7 @@ function categoryIcon(category) {
   );
 }
 
-function DocumentActions({ doc, onDelete }) {
+function DocumentActions({ doc, onDelete, onPreview }) {
   if (doc.empty) return null;
   const isRevision = doc.status === "revision";
   return (
@@ -169,6 +224,7 @@ function DocumentActions({ doc, onDelete }) {
       <button
         className="p-2 hover:bg-surface-container-highest rounded-lg text-primary"
         title="Lihat"
+        onClick={() => onPreview(doc)}
       >
         <MaterialSymbol icon="visibility" />
       </button>

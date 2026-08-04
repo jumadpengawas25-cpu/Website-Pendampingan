@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useLocation, useParams } from "../../router.jsx";
 import { matchRoute } from "../../router.jsx";
 import MaterialSymbol from "../MaterialSymbol.jsx";
@@ -15,16 +16,34 @@ export default function SideNavBar({ school, schoolName }) {
     ? `/portal-review/${schoolSlug}`
     : "/portal-review";
 
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handlePasswordChange = (e) => {
+    e.preventDefault();
+    setShowPasswordModal(false);
+    setOldPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+  };
+
   const navLinks = [
-    { label: "Dashboard", icon: "dashboard", href: "/" },
+    { label: "Dashboard", icon: "dashboard", href: "#" },
     { label: "Verification", icon: "verified_user", href: portalHref },
     { label: "Review", icon: "verified_user", href: reviewHref },
-    { label: "Logbook", icon: "menu_book", href: schoolSlug ? `/logbook/${schoolSlug}` : "/logbook" },
-    { label: "Settings", icon: "settings", href: "#" },
+    {
+      label: "Logbook",
+      icon: "menu_book",
+      href: schoolSlug ? `/logbook/${schoolSlug}` : "/logbook",
+    },
+    { label: "Ubah Password", icon: "lock", action: "password" },
   ];
 
   return (
-    <aside className="h-screen w-64 fixed left-0 top-0 bg-surface border-r border-outline-variant flex flex-col py-stack-lg z-50">
+    <>
+      <aside className="h-screen w-64 fixed left-0 top-0 bg-surface border-r border-outline-variant flex flex-col py-stack-lg z-50">
       <div className="px-stack-lg mb-stack-lg">
         <h1 className="font-headline-lg text-headline-lg text-primary tracking-tight">
           {schoolName ?? portalInfo.school}
@@ -33,7 +52,26 @@ export default function SideNavBar({ school, schoolName }) {
 
       <div className="flex flex-col px-stack-md space-y-2 flex-grow">
         {navLinks.map((item) => {
-          const active = item.href !== "#" && matchRoute(item.href, path);
+          if (item.action === "password") {
+            return (
+              <button
+                key={item.label}
+                type="button"
+                onClick={() => setShowPasswordModal(true)}
+                className="flex items-center gap-3 py-3 px-4 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg group w-full text-left"
+              >
+                <MaterialSymbol
+                  icon={item.icon}
+                  className="text-on-surface-variant"
+                />
+                <span className="font-label-md text-label-md">
+                  {item.label}
+                </span>
+              </button>
+            );
+          }
+          const active =
+            item.href !== "#" && matchRoute(item.href, path);
           return (
             <Link
               key={item.label}
@@ -48,7 +86,9 @@ export default function SideNavBar({ school, schoolName }) {
                 icon={item.icon}
                 className={active ? "text-primary" : "text-on-surface-variant"}
               />
-              <span className="font-label-md text-label-md">{item.label}</span>
+              <span className="font-label-md text-label-md">
+                {item.label}
+              </span>
             </Link>
           );
         })}
@@ -93,5 +133,87 @@ export default function SideNavBar({ school, schoolName }) {
         </nav>
       </div>
     </aside>
+
+    {showPasswordModal && (
+      <div
+        className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center"
+        onClick={() => setShowPasswordModal(false)}
+      >
+        <div
+          className="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 w-full max-w-md shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="font-title-md text-title-md text-on-surface">
+              Ubah Password
+            </h3>
+            <button
+              type="button"
+              onClick={() => setShowPasswordModal(false)}
+              className="p-1 hover:bg-surface-container-highest rounded-lg"
+            >
+              <MaterialSymbol icon="close" />
+            </button>
+          </div>
+          <form onSubmit={handlePasswordChange} className="flex flex-col gap-4">
+            <div>
+              <label className="block text-label-md font-bold text-on-surface mb-2">
+                Password Lama
+              </label>
+              <input
+                type="password"
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
+                className="w-full bg-surface-container-low border-outline-variant rounded-lg p-3 text-body-md focus:ring-2 focus:ring-primary focus:border-primary"
+                placeholder="Masukkan password lama"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-label-md font-bold text-on-surface mb-2">
+                Password Baru
+              </label>
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="w-full bg-surface-container-low border-outline-variant rounded-lg p-3 text-body-md focus:ring-2 focus:ring-primary focus:border-primary"
+                placeholder="Masukkan password baru"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-label-md font-bold text-on-surface mb-2">
+                Konfirmasi Password Baru
+              </label>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full bg-surface-container-low border-outline-variant rounded-lg p-3 text-body-md focus:ring-2 focus:ring-primary focus:border-primary"
+                placeholder="Konfirmasi password baru"
+                required
+              />
+            </div>
+            <div className="flex justify-end gap-3 mt-2">
+              <button
+                type="button"
+                onClick={() => setShowPasswordModal(false)}
+                className="px-6 py-3 border border-outline-variant rounded-lg font-bold text-on-surface-variant hover:bg-surface-container-highest"
+              >
+                Batal
+              </button>
+              <button
+                type="submit"
+                className="px-8 py-3 bg-secondary text-on-secondary rounded-lg font-bold shadow-md hover:opacity-90 transition-all"
+              >
+                Simpan
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    )}
+    </>
   );
 }

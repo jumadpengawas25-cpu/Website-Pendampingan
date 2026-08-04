@@ -51,6 +51,7 @@ export const initialDocuments = [
     versionClass: "bg-primary-fixed text-on-primary-fixed-variant",
     date: "12 Okt 2024",
     status: "verified",
+    fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: "d2",
@@ -61,6 +62,7 @@ export const initialDocuments = [
     versionClass: "bg-surface-container-high text-on-surface-variant",
     date: "15 Okt 2024",
     status: "pending",
+    fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: "d3",
@@ -71,6 +73,7 @@ export const initialDocuments = [
     versionClass: "bg-surface-container-high text-on-surface-variant",
     date: "08 Okt 2024",
     status: "revision",
+    fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
 ];
 
