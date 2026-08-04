@@ -4,16 +4,16 @@ import { schools } from "../data.js";
 
 export default function SchoolsSection() {
   return (
-    <section className="py-stack-lg bg-surface-container-low" id="schools">
-      <div className="max-w-container-max-width mx-auto px-margin-desktop">
+    <section className="bg-slate-900/90 backdrop-blur-md py-12 px-4 sm:px-6 lg:px-8" id="schools">
+      <div className="max-w-container-max-width mx-auto">
         <div className="flex justify-between items-end mb-stack-lg">
           <div>
-            <h2 className="font-headline-lg text-primary">SMA Binaan</h2>
-            <p className="text-on-surface-variant">
+            <h2 className="font-headline-lg text-white font-bold">SMA Binaan</h2>
+            <p className="text-blue-200">
               Daftar satuan pendidikan dalam lingkup supervisi aktif.
             </p>
           </div>
-          <button className="flex items-center gap-2 text-primary font-label-md hover:underline">
+          <button className="flex items-center gap-2 text-blue-300 hover:text-white">
             Lihat Semua Sekolah
             <MaterialSymbol icon="arrow_forward" className="text-sm" />
           </button>
@@ -31,7 +31,7 @@ export default function SchoolsSection() {
 
 function SchoolCard({ school }) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-outline-variant overflow-hidden hover:shadow-lg transition-shadow">
+    <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow">
       <div className={`h-2 w-full ${school.accent}`}></div>
       <div className="p-stack-md">
         <div className="flex justify-between items-start mb-4">
