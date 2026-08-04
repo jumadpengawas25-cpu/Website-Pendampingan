@@ -4,24 +4,24 @@ import { schools } from "../data.js";
 
 export default function SchoolsSection() {
   return (
-    <section className="bg-slate-900/90 backdrop-blur-md py-12 px-4 sm:px-6 lg:px-8" id="schools">
+    <section className="bg-gradient-to-r from-[#0b2575]/90 via-[#0e2158]/90 to-[#0e1e48]/90 backdrop-blur-md py-12 px-4 sm:px-6 lg:px-8" id="schools">
       <div className="max-w-container-max-width mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-400 text-xs font-medium tracking-wide uppercase mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-blue-200 text-xs font-semibold tracking-wide uppercase mb-3">
               ● SATUAN PENDIDIKAN BINAAN
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
               Daftar SMA Binaan & Ekosistem Supervisi
             </h2>
-            <p className="text-blue-200/80 text-sm sm:text-base max-w-2xl">
+            <p className="text-blue-100/90 text-sm sm:text-base max-w-2xl">
               Portofolio digital, profil, serta pelaporan capaian mutu dari seluruh Sekolah Menengah Atas di wilayah supervisi aktif Cabang Dinas Pendidikan Kabupaten Malang.
             </p>
           </div>
-          <button className="flex items-center gap-2 text-blue-300 hover:text-white">
+          <a href="/schools" className="text-blue-200 hover:text-white font-medium flex items-center gap-1 text-sm">
             Lihat Semua Sekolah
             <MaterialSymbol icon="arrow_forward" className="text-sm" />
-          </button>
+          </a>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
@@ -36,7 +36,7 @@ export default function SchoolsSection() {
 
 function SchoolCard({ school }) {
   return (
-    <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow">
+    <div className="bg-white rounded-xl shadow-xl border border-blue-100/20 overflow-hidden hover:shadow-md transition-shadow">
       <div className={`h-2 w-full ${school.accent}`}></div>
       <div className="p-stack-md">
         <div className="flex justify-between items-start mb-4">
