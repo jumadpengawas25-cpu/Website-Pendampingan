@@ -25,6 +25,7 @@ export default function PortalSekolah() {
 
   const [documents, setDocuments] = useState(initialDocuments);
   const [category, setCategory] = useState("ksp");
+  const [editingDoc, setEditingDoc] = useState(null);
 
   if (!isLoggedIn) {
     return <LoginPortalSekolah schoolSlug={schoolSlug} />;
@@ -46,12 +47,28 @@ export default function PortalSekolah() {
     setDocuments((prev) => [doc, ...prev]);
   };
 
+  const handleEditDocument = (doc) => {
+    setEditingDoc(doc);
+    setCategory(doc.category);
+  };
+
+  const handleUpdateDocument = (updatedDoc) => {
+    setDocuments((prev) =>
+      prev.map((d) => (d.id === updatedDoc.id ? updatedDoc : d)),
+    );
+    setEditingDoc(null);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingDoc(null);
+  };
+
   const handleDelete = (id) => {
     setDocuments((prev) => prev.filter((d) => d.id !== id));
   };
 
   const credential = sekolahCredentials.find(
-    (c) => c.schoolSlug === schoolSlug
+    (c) => c.schoolSlug === schoolSlug,
   );
 
   return (
@@ -73,7 +90,9 @@ export default function PortalSekolah() {
               className="text-primary"
               style={{ fontVariationSettings: "'FILL' 1" }}
             />
-            <span className="text-label-md font-bold">{portalInfo.semester}</span>
+            <span className="text-label-md font-bold">
+              {portalInfo.semester}
+            </span>
           </div>
         </header>
 
@@ -110,6 +129,9 @@ export default function PortalSekolah() {
             category={category}
             onCategoryChange={handleCategoryChange}
             onAddDocument={handleAddDocument}
+            editingDoc={editingDoc}
+            onUpdateDocument={handleUpdateDocument}
+            onCancelEdit={handleCancelEdit}
           />
           <div className="col-span-4 flex flex-col gap-stack-lg">
             <AiInsight category={category} />
@@ -117,7 +139,11 @@ export default function PortalSekolah() {
           </div>
         </div>
 
-        <DocumentTable documents={documents} onDelete={handleDelete} />
+        <DocumentTable
+          documents={documents}
+          onDelete={handleDelete}
+          onEditDocument={handleEditDocument}
+        />
 
         <footer className="mt-stack-lg pt-stack-lg border-t border-outline-variant grid grid-cols-1 md:grid-cols-3 gap-gutter text-on-surface-variant">
           <div className="col-span-1">
@@ -131,13 +157,22 @@ export default function PortalSekolah() {
           </div>
           <div className="col-span-1 flex flex-col gap-2">
             <p className="font-bold text-on-surface mb-1">Tautan Cepat</p>
-            <a className="text-label-sm hover:text-primary-fixed-dim transition-colors" href="#">
+            <a
+              className="text-label-sm hover:text-primary-fixed-dim transition-colors"
+              href="#"
+            >
               Panduan ARKAS
             </a>
-            <a className="text-label-sm hover:text-primary-fixed-dim transition-colors" href="#">
+            <a
+              className="text-label-sm hover:text-primary-fixed-dim transition-colors"
+              href="#"
+            >
               Kebijatan Privasi
             </a>
-            <a className="text-label-sm hover:text-primary-fixed-dim transition-colors" href="#">
+            <a
+              className="text-label-sm hover:text-primary-fixed-dim transition-colors"
+              href="#"
+            >
               Portal Resmi Kemdikbud
             </a>
           </div>
@@ -147,9 +182,18 @@ export default function PortalSekolah() {
               rights reserved.
             </p>
             <div className="flex justify-end gap-stack-md mt-2">
-              <MaterialSymbol className="cursor-pointer hover:text-primary" icon="qr_code_2" />
-              <MaterialSymbol className="cursor-pointer hover:text-primary" icon="language" />
-              <MaterialSymbol className="cursor-pointer hover:text-primary" icon="mail" />
+              <MaterialSymbol
+                className="cursor-pointer hover:text-primary"
+                icon="qr_code_2"
+              />
+              <MaterialSymbol
+                className="cursor-pointer hover:text-primary"
+                icon="language"
+              />
+              <MaterialSymbol
+                className="cursor-pointer hover:text-primary"
+                icon="mail"
+              />
             </div>
           </div>
         </footer>

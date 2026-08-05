@@ -1,15 +1,38 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { portalCategories } from "../../portalData.js";
 
 const ALLOWED = ["application/pdf", "application/msword"];
 const MAX_MB = 10;
 
-export default function UploadForm({ category, onCategoryChange, onAddDocument }) {
+export default function UploadForm({
+  category,
+  onCategoryChange,
+  onAddDocument,
+  editingDoc = null,
+  onUpdateDocument,
+  onCancelEdit,
+}) {
   const [title, setTitle] = useState("");
   const [fileName, setFileName] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileError, setFileError] = useState("");
   const fileInputRef = useRef(null);
+
+  const isEditing = !!editingDoc;
+
+  useEffect(() => {
+    if (editingDoc) {
+      setTitle(editingDoc.title || "");
+      setFileName(editingDoc.fileName || "");
+      setSelectedFile(null);
+      setFileError("");
+    } else {
+      setTitle("");
+      setFileName("");
+      setSelectedFile(null);
+      setFileError("");
+    }
+  }, [editingDoc]);
 
   const validateFile = (file) => {
     if (!file) return "File belum dipilih.";
@@ -40,13 +63,35 @@ export default function UploadForm({ category, onCategoryChange, onAddDocument }
       const file = e.dataTransfer.files?.[0];
       if (file) handleFile(file);
     },
-    [setFileError, setFileName, setSelectedFile]
+    [setFileError, setFileName, setSelectedFile],
   );
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const cat = portalCategories.find((c) => c.id === category);
     if (!cat) return;
+
+    if (isEditing) {
+      const fileUrl = selectedFile
+        ? URL.createObjectURL(selectedFile)
+        : editingDoc.fileUrl;
+      onUpdateDocument({
+        ...editingDoc,
+        title,
+        subtitle: cat.sub,
+        category,
+        date: new Date().toLocaleDateString("id-ID", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        }),
+        status: "draft",
+        fileUrl,
+        fileName: fileName || editingDoc.fileName,
+      });
+      return;
+    }
+
     if (!title.trim() || !fileName) {
       setFileError(!fileName ? "File belum dipilih." : "");
       return;
@@ -56,8 +101,6 @@ export default function UploadForm({ category, onCategoryChange, onAddDocument }
       title,
       subtitle: cat.sub,
       category,
-      version: "V.1",
-      versionClass: "bg-primary-fixed text-on-primary-fixed-variant",
       date: new Date().toLocaleDateString("id-ID", {
         day: "numeric",
         month: "short",
@@ -65,6 +108,7 @@ export default function UploadForm({ category, onCategoryChange, onAddDocument }
       }),
       status: "draft",
       fileUrl: URL.createObjectURL(selectedFile),
+      fileName,
     });
     setTitle("");
     setFileName("");
@@ -79,7 +123,7 @@ export default function UploadForm({ category, onCategoryChange, onAddDocument }
           upload_file
         </span>
         <h3 className="font-title-md text-title-md text-on-surface">
-          Unggah Dokumen Baru
+          {isEditing ? "Edit Dokumen" : "Unggah Dokumen Baru"}
         </h3>
       </div>
 
@@ -137,7 +181,9 @@ export default function UploadForm({ category, onCategoryChange, onAddDocument }
               </p>
             )}
             {fileError && (
-              <p className="text-label-sm text-error font-bold mt-2">{fileError}</p>
+              <p className="text-label-sm text-error font-bold mt-2">
+                {fileError}
+              </p>
             )}
             <input
               ref={fileInputRef}
@@ -160,6 +206,15 @@ export default function UploadForm({ category, onCategoryChange, onAddDocument }
         </div>
 
         <div className="col-span-2 flex justify-end gap-stack-md">
+          {isEditing && (
+            <button
+              type="button"
+              className="px-6 py-3 border border-outline-variant rounded-lg font-bold text-on-surface-variant hover:bg-surface-container-highest"
+              onClick={onCancelEdit}
+            >
+              Batal Edit
+            </button>
+          )}
           <button
             type="reset"
             className="px-6 py-3 border border-outline-variant rounded-lg font-bold text-on-surface-variant hover:bg-surface-container-highest"
@@ -170,14 +225,14 @@ export default function UploadForm({ category, onCategoryChange, onAddDocument }
               setFileError("");
             }}
           >
-            Batalkan
+            {isEditing ? "Reset" : "Batalkan"}
           </button>
           <button
             type="submit"
             className="px-8 py-3 bg-secondary text-on-secondary rounded-lg font-bold shadow-md hover:opacity-90 transition-all"
-            disabled={!selectedFile || !title.trim()}
+            disabled={!isEditing && (!selectedFile || !title.trim())}
           >
-            Kirim Dokumen
+            {isEditing ? "Perbarui Dokumen" : "Kirim Dokumen"}
           </button>
         </div>
       </form>

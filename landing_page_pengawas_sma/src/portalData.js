@@ -47,40 +47,41 @@ export const initialDocuments = [
     title: "Laporan KOSP Semester 1",
     subtitle: "Sesuai Peraturan No. 12/2024",
     category: "ksp",
-    version: "V.2",
-    versionClass: "bg-primary-fixed text-on-primary-fixed-variant",
     date: "12 Okt 2024",
     status: "verified",
-    fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    fileUrl:
+      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: "d2",
     title: "Anggaran ARKAS 2025",
     subtitle: "Pengajuan Awal Tahun",
     category: "arkas",
-    version: "V.1",
-    versionClass: "bg-surface-container-high text-on-surface-variant",
     date: "15 Okt 2024",
     status: "pending",
-    fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    fileUrl:
+      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: "d3",
     title: "Evaluasi AKM Siswa",
     subtitle: "Data Sampling Kelas XI",
     category: "akm",
-    version: "V.1",
-    versionClass: "bg-surface-container-high text-on-surface-variant",
     date: "08 Okt 2024",
     status: "revision",
-    fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    fileUrl:
+      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
 ];
 
 export const statusMeta = {
   draft: { label: "DRAFT", class: "status-draft", icon: "schedule" },
   pending: { label: "PENDING", class: "status-pending", icon: "pending" },
-  verified: { label: "TERVERIFIKASI", class: "status-verified", icon: "verified" },
+  verified: {
+    label: "TERVERIFIKASI",
+    class: "status-verified",
+    icon: "verified",
+  },
   revision: { label: "REVISI", class: "status-revision", icon: "feedback" },
 };
 

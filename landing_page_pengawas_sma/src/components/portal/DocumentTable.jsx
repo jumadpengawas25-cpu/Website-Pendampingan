@@ -2,7 +2,7 @@ import { useState } from "react";
 import MaterialSymbol from "../MaterialSymbol.jsx";
 import { statusMeta } from "../../portalData.js";
 
-export default function DocumentTable({ documents, onDelete }) {
+export default function DocumentTable({ documents, onDelete, onEditDocument }) {
   const [previewDoc, setPreviewDoc] = useState(null);
   const rows = documents.length
     ? documents
@@ -12,8 +12,6 @@ export default function DocumentTable({ documents, onDelete }) {
           title: "Belum ada dokumen",
           subtitle: "Unggah dokumen pertama melalui formulir di atas.",
           category: "-",
-          version: "-",
-          versionClass: "bg-surface-container-high text-on-surface-variant",
           date: "-",
           status: "draft",
           empty: true,
@@ -26,7 +24,7 @@ export default function DocumentTable({ documents, onDelete }) {
       arkas: "Keuangan",
       akm: "Evaluasi",
       perencanaan: "Perencanaan",
-    }[id] ?? id);
+    })[id] ?? id;
 
   return (
     <section className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
@@ -60,7 +58,6 @@ export default function DocumentTable({ documents, onDelete }) {
               {[
                 "Nama Dokumen",
                 "Kategori",
-                "Versi",
                 "Tanggal Unggah",
                 "Status",
                 "Aksi",
@@ -101,13 +98,6 @@ export default function DocumentTable({ documents, onDelete }) {
                   <td className="px-stack-lg py-5 text-body-md text-on-surface-variant">
                     {categoryLabel(doc.category)}
                   </td>
-                  <td className="px-stack-lg py-5">
-                    <span
-                      className={`px-2 py-1 rounded text-[10px] font-bold ${doc.versionClass}`}
-                    >
-                      {doc.version}
-                    </span>
-                  </td>
                   <td className="px-stack-lg py-5 text-body-md text-on-surface-variant">
                     {doc.date}
                   </td>
@@ -120,6 +110,7 @@ export default function DocumentTable({ documents, onDelete }) {
                     <DocumentActions
                       doc={doc}
                       onDelete={onDelete}
+                      onEdit={onEditDocument}
                       onPreview={setPreviewDoc}
                     />
                   </td>
@@ -164,7 +155,9 @@ export default function DocumentTable({ documents, onDelete }) {
                 <h3 className="font-title-md text-title-md text-on-surface">
                   {previewDoc.title}
                 </h3>
-                <span className={`status-pill ${statusMeta[previewDoc.status]?.class}`}>
+                <span
+                  className={`status-pill ${statusMeta[previewDoc.status]?.class}`}
+                >
                   {statusMeta[previewDoc.status]?.label}
                 </span>
               </div>
@@ -216,14 +209,13 @@ function categoryIcon(category) {
   );
 }
 
-function DocumentActions({ doc, onDelete, onPreview }) {
+function DocumentActions({ doc, onDelete, onEdit, onPreview }) {
   if (doc.empty) return null;
-  const isRevision = doc.status === "revision";
   return (
     <div className="flex justify-end gap-2">
       <button
         className="p-2 hover:bg-surface-container-highest rounded-lg text-primary"
-        title="Lihat"
+        title="Lihat Dokumen"
         onClick={() => {
           if (doc.fileUrl) {
             window.open(doc.fileUrl, "_blank");
@@ -234,19 +226,28 @@ function DocumentActions({ doc, onDelete, onPreview }) {
       >
         <MaterialSymbol icon="visibility" />
       </button>
-      {isRevision ? (
-        <button className="p-2 hover:bg-surface-container-highest rounded-lg text-primary font-bold text-label-sm">
-          Unggah V.2
-        </button>
-      ) : (
-        <button
-          className="p-2 hover:bg-surface-container-highest rounded-lg text-on-surface-variant"
-          title="Hapus"
-          onClick={() => onDelete(doc.id)}
-        >
-          <MaterialSymbol icon="delete" />
-        </button>
-      )}
+      <button
+        className="p-2 hover:bg-surface-container-highest rounded-lg text-primary"
+        title="Edit / Unggah Ulang"
+        onClick={() => onEdit(doc)}
+      >
+        <MaterialSymbol icon="lock" />
+      </button>
+      <button
+        className="p-2 hover:bg-surface-container-highest rounded-lg text-error"
+        title="Hapus Dokumen"
+        onClick={() => {
+          if (
+            window.confirm(
+              "Hapus dokumen ini? Tindakan ini tidak dapat dibatalkan.",
+            )
+          ) {
+            onDelete(doc.id);
+          }
+        }}
+      >
+        <MaterialSymbol icon="delete" />
+      </button>
     </div>
   );
 }
