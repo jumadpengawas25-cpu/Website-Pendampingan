@@ -11,6 +11,7 @@ const navLinks = [
   { label: "Berita", href: "#news" },
   { label: "Logbook", href: "/logbook" },
   { label: "Portal Sekolah", href: `/login-portal` },
+  { label: "Portal Pengawas", href: `/login-pengawas` },
 ];
 
 export default function Header() {
