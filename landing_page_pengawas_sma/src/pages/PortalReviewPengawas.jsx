@@ -2,14 +2,15 @@ import { useState } from "react";
 import MaterialSymbol from "../components/MaterialSymbol.jsx";
 import WhatsappPreview from "../components/WhatsappPreview.jsx";
 import { portalInfo, portalCategories, statusMeta } from "../portalData.js";
-import { schools, getSchoolBySlug } from "../data.js";
-import { useParams, useNavigate } from "../router.jsx";
+import { schools } from "../data.js";
+import { useNavigate } from "../router.jsx";
 import SideNavBar from "../components/portal/SideNavBar.jsx";
 import DocumentCounters from "../components/portal/DocumentCounters.jsx";
 import AiInsight from "../components/portal/AiInsight.jsx";
 import RecentActivity from "../components/portal/RecentActivity.jsx";
 import LoginPortalSekolah from "../components/portal/LoginPortalSekolah.jsx";
 import { usePortalAuth } from "../hooks/usePortalAuth.js";
+import { useActiveSchool } from "../hooks/useActiveSchool.js";
 
 const reviewDocs = [
   {
@@ -22,6 +23,7 @@ const reviewDocs = [
     date: "12 Okt 2024",
     status: "pending",
     reviewerNote: "",
+    fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: "r2",
@@ -33,6 +35,7 @@ const reviewDocs = [
     date: "15 Okt 2024",
     status: "pending",
     reviewerNote: "",
+    fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: "r3",
@@ -44,6 +47,7 @@ const reviewDocs = [
     date: "08 Okt 2024",
     status: "revision",
     reviewerNote: "Halaman 12-14 kurang lengkap",
+    fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: "r4",
@@ -55,16 +59,21 @@ const reviewDocs = [
     date: "20 Okt 2024",
     status: "draft",
     reviewerNote: "",
+    fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
 ];
 
-function ReviewActions({ doc, onApprove, onRevision, onView }) {
+function ReviewActions({ doc, onApprove, onRevision }) {
   return (
     <div className="flex justify-end gap-2">
       <button
         className="p-2 hover:bg-surface-container-highest rounded-lg text-primary"
         title="Lihat Detail"
-        onClick={() => onView(doc)}
+        onClick={() => {
+          if (doc.fileUrl) {
+            window.open(doc.fileUrl, "_blank");
+          }
+        }}
       >
         <MaterialSymbol icon="visibility" />
       </button>
@@ -99,7 +108,7 @@ function ReviewActions({ doc, onApprove, onRevision, onView }) {
   );
 }
 
-function ReviewTable({ documents, onApprove, onRevision, onView }) {
+function ReviewTable({ documents, onApprove, onRevision }) {
   const rows = documents.length
     ? documents
     : [
@@ -218,12 +227,11 @@ function ReviewTable({ documents, onApprove, onRevision, onView }) {
                     {doc.reviewerNote || "-"}
                   </td>
                   <td className="px-stack-lg py-5 text-right">
-                    <ReviewActions
-                      doc={doc}
-                      onApprove={onApprove}
-                      onRevision={onRevision}
-                      onView={onView}
-                    />
+                     <ReviewActions
+                       doc={doc}
+                       onApprove={onApprove}
+                       onRevision={onRevision}
+                     />
                   </td>
                 </tr>
               );
@@ -269,18 +277,15 @@ function categoryIcon(category) {
 export default function PortalReviewPengawas() {
   const [documents, setDocuments] = useState(reviewDocs);
   const [category] = useState("ksp");
-  const [selectedDoc, setSelectedDoc] = useState(null);
   const [waPreview, setWaPreview] = useState(null);
 
-  const params = useParams();
   const navigate = useNavigate();
   const { isLoggedIn, session } = usePortalAuth();
+  const activeSchool = useActiveSchool();
 
-  const schoolSlug = params.school
-    ? getSchoolBySlug(params.school)?.slug ?? schools[0]?.slug
-    : schools[0]?.slug;
-  const school = schoolSlug ? getSchoolBySlug(schoolSlug) ?? schools[0] : schools[0];
-  const schoolName = school ? school.name : portalInfo.school;
+  const schoolSlug = activeSchool?.slug ?? schools[0]?.slug;
+  const school = activeSchool ?? schools[0];
+  const schoolName = school?.name ?? portalInfo.school;
 
   if (!isLoggedIn) {
     return <LoginPortalSekolah schoolSlug={schoolSlug} />;
@@ -331,10 +336,6 @@ export default function PortalReviewPengawas() {
     }
   };
 
-  const handleView = (doc) => {
-    setSelectedDoc(doc);
-  };
-
   const handleCloseWaPreview = () => {
     setWaPreview(null);
   };
@@ -378,7 +379,6 @@ export default function PortalReviewPengawas() {
               documents={documents}
               onApprove={handleApprove}
               onRevision={handleRevision}
-              onView={handleView}
             />
           </div>
           <div className="col-span-4 flex flex-col gap-stack-lg">
@@ -386,80 +386,6 @@ export default function PortalReviewPengawas() {
             <RecentActivity />
           </div>
         </div>
-
-        {selectedDoc && (
-          <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center" onClick={() => setSelectedDoc(null)}>
-            <div className="bg-surface-container-lowest rounded-xl p-stack-lg shadow-xl border border-outline-variant max-w-lg w-full mx-4" onClick={(e) => e.stopPropagation()}>
-              <div className="flex justify-between items-center mb-stack-md">
-                <h3 className="font-title-md text-title-md text-on-surface">
-                  Detail Dokumen
-                </h3>
-                <button
-                  className="p-1 hover:bg-surface-container-highest rounded"
-                  onClick={() => setSelectedDoc(null)}
-                >
-                  <MaterialSymbol icon="close" />
-                </button>
-              </div>
-              <div className="space-y-3 text-label-md">
-                <div className="flex justify-between">
-                  <span className="text-on-surface-variant">Judul</span>
-                  <span className="font-bold text-on-surface">{selectedDoc.title}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-on-surface-variant">Kategori</span>
-                  <span className="font-bold text-on-surface">
-                    {portalCategories.find((c) => c.id === selectedDoc.category)?.label}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-on-surface-variant">Versi</span>
-                  <span className="font-bold text-on-surface">{selectedDoc.version}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-on-surface-variant">Tanggal</span>
-                  <span className="font-bold text-on-surface">{selectedDoc.date}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-on-surface-variant">Status</span>
-                  <span className={`status-pill ${statusMeta[selectedDoc.status]?.class}`}>
-                    {statusMeta[selectedDoc.status]?.label}
-                  </span>
-                </div>
-                {selectedDoc.reviewerNote && (
-                  <div className="flex justify-between">
-                    <span className="text-on-surface-variant">Catatan</span>
-                    <span className="font-bold text-on-surface text-right max-w-[60%]">{selectedDoc.reviewerNote}</span>
-                  </div>
-                )}
-              </div>
-              <div className="mt-stack-lg flex justify-end gap-stack-md">
-                <button
-                  className="px-6 py-3 border border-outline-variant rounded-lg font-bold text-on-surface-variant hover:bg-surface-container-highest"
-                  onClick={() => setSelectedDoc(null)}
-                >
-                  Tutup
-                </button>
-                {selectedDoc.status === "pending" && (
-                  <>
-                    <button
-                      className="px-6 py-3 bg-emerald-600 text-white rounded-lg font-bold hover:opacity-90"
-                      onClick={() => { handleApprove(selectedDoc.id); setSelectedDoc(null); }}
-                    >
-                      Approve
-                    </button>
-                    <button
-                      className="px-6 py-3 bg-amber-500 text-white rounded-lg font-bold hover:opacity-90"
-                      onClick={() => { handleRevision(selectedDoc.id); setSelectedDoc(null); }}
-                    >
-                      Minta Revisi
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
 
         {waPreview && (
           <WhatsappPreview

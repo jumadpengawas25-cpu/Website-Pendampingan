@@ -1,9 +1,9 @@
 import { useState } from "react";
 import MaterialSymbol from "./components/MaterialSymbol.jsx";
 import { portalInfo, initialDocuments } from "./portalData.js";
-import { schools, getSchoolBySlug } from "./data.js";
+import { schools } from "./data.js";
 import { sekolahCredentials } from "./data/sekolah.js";
-import { useParams, useNavigate } from "./router.jsx";
+import { useNavigate } from "./router.jsx";
 import SideNavBar from "./components/portal/SideNavBar.jsx";
 import DocumentCounters from "./components/portal/DocumentCounters.jsx";
 import AiInsight from "./components/portal/AiInsight.jsx";
@@ -12,17 +12,16 @@ import UploadForm from "./components/portal/UploadForm.jsx";
 import DocumentTable from "./components/portal/DocumentTable.jsx";
 import LoginPortalSekolah from "./components/portal/LoginPortalSekolah.jsx";
 import { usePortalAuth } from "./hooks/usePortalAuth.js";
+import { useActiveSchool } from "./hooks/useActiveSchool.js";
 
 export default function PortalSekolah() {
-  const params = useParams();
   const navigate = useNavigate();
   const { isLoggedIn, logout, session } = usePortalAuth();
+  const activeSchool = useActiveSchool();
 
-  const schoolSlug = params.school
-    ? getSchoolBySlug(params.school)?.slug ?? schools[0]?.slug
-    : schools[0]?.slug;
-  const school = schoolSlug ? getSchoolBySlug(schoolSlug) ?? schools[0] : schools[0];
-  const schoolName = school ? school.name : portalInfo.school;
+  const schoolSlug = activeSchool?.slug ?? schools[0]?.slug;
+  const school = activeSchool ?? schools[0];
+  const schoolName = school?.name ?? portalInfo.school;
 
   const [documents, setDocuments] = useState(initialDocuments);
   const [category, setCategory] = useState("ksp");

@@ -2,8 +2,8 @@ import { useState } from "react";
 import MaterialSymbol from "../components/MaterialSymbol.jsx";
 import SideNavBar from "../components/portal/SideNavBar.jsx";
 import { portalInfo } from "../portalData.js";
-import { schools, getSchoolBySlug } from "../data.js";
-import { useParams } from "../router.jsx";
+import { schools } from "../data.js";
+import { useActiveSchool } from "../hooks/useActiveSchool.js";
 
 const initialLogbookEntries = [
   {
@@ -36,16 +36,15 @@ const initialLogbookEntries = [
 ];
 
 export default function LogbookPendampingan() {
-  const params = useParams();
-  const school = params.school
-    ? getSchoolBySlug(params.school) ?? schools[0]
-    : schools[0];
-  const schoolName = school ? school.name : portalInfo.school;
+  const activeSchool = useActiveSchool();
+  const school = activeSchool ?? schools[0];
+  const schoolName = school?.name ?? portalInfo.school;
 
   const [entries, setEntries] = useState(initialLogbookEntries);
+  const filteredEntries = entries.filter((entry) => entry.sekolah === school?.name);
   const [formOpen, setFormOpen] = useState(false);
   const [form, setForm] = useState({
-    sekolah: "",
+    sekolah: activeSchool?.name ?? "",
     sasaran: "",
     fokusKegiatan: "",
     rtl: "",
@@ -126,7 +125,10 @@ export default function LogbookPendampingan() {
           <button
             type="button"
             className="flex items-center gap-2 px-5 py-3 bg-secondary text-on-secondary rounded-lg font-bold shadow-md hover:opacity-90 transition-all"
-            onClick={() => setFormOpen(true)}
+            onClick={() => {
+              setFormOpen(true);
+              setForm((prev) => ({ ...prev, sekolah: activeSchool?.name ?? prev.sekolah }));
+            }}
           >
             <MaterialSymbol icon="add" />
             Catat Kunjungan
@@ -306,7 +308,7 @@ export default function LogbookPendampingan() {
               Riwayat Kunjungan
             </h3>
             <span className="text-label-sm text-on-surface-variant">
-              {entries.length} entri
+              {filteredEntries.length} entri
             </span>
           </div>
           <div className="overflow-x-auto">
@@ -331,7 +333,7 @@ export default function LogbookPendampingan() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-outline-variant/30">
-                {entries.map((entry) => (
+                {filteredEntries.map((entry) => (
                   <tr
                     key={entry.id}
                     className="hover:bg-surface-container-lowest transition-colors"
@@ -361,7 +363,7 @@ export default function LogbookPendampingan() {
               </tbody>
             </table>
           </div>
-          {entries.length === 0 && (
+          {filteredEntries.length === 0 && (
             <div className="p-stack-lg text-center text-on-surface-variant">
               <MaterialSymbol icon="event_busy" className="text-4xl text-outline mb-2" />
               <p className="text-label-md">Belum ada catatan kunjungan</p>

@@ -172,15 +172,13 @@ export default function UploadForm({ category, onCategoryChange, onAddDocument }
           >
             Batalkan
           </button>
-          {selectedFile !== null && (
-            <button
-              type="submit"
-              className="px-8 py-3 bg-secondary text-on-secondary rounded-lg font-bold shadow-md hover:opacity-90 transition-all"
-              disabled={!title.trim()}
-            >
-              Kirim Dokumen
-            </button>
-          )}
+          <button
+            type="submit"
+            className="px-8 py-3 bg-secondary text-on-secondary rounded-lg font-bold shadow-md hover:opacity-90 transition-all"
+            disabled={!selectedFile || !title.trim()}
+          >
+            Kirim Dokumen
+          </button>
         </div>
       </form>
     </section>

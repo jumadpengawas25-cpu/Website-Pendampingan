@@ -224,7 +224,13 @@ function DocumentActions({ doc, onDelete, onPreview }) {
       <button
         className="p-2 hover:bg-surface-container-highest rounded-lg text-primary"
         title="Lihat"
-        onClick={() => onPreview(doc)}
+        onClick={() => {
+          if (doc.fileUrl) {
+            window.open(doc.fileUrl, "_blank");
+          } else {
+            onPreview(doc);
+          }
+        }}
       >
         <MaterialSymbol icon="visibility" />
       </button>
