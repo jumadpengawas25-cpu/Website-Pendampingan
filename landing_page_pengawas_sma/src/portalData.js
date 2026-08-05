@@ -1,3 +1,44 @@
+export const academicPeriods = [
+  { id: "ganjil-2024/2025", label: "Ganjil 2024/2025" },
+  { id: "genap-2024/2025", label: "Genap 2024/2025" },
+  { id: "ganjil-2025/2026", label: "Ganjil 2025/2026" },
+  { id: "genap-2025/2026", label: "Genap 2025/2026" },
+  { id: "ganjil-2026/2027", label: "Ganjil 2026/2027" },
+  { id: "genap-2026/2027", label: "Genap 2026/2027" },
+];
+
+const STORAGE_PREFIX = "portal_docs_";
+
+export function getDocumentsKey(schoolId) {
+  return `${STORAGE_PREFIX}${schoolId}`;
+}
+
+export function loadDocuments(schoolId) {
+  try {
+    const key = getDocumentsKey(schoolId);
+    const stored = localStorage.getItem(key);
+    if (stored) {
+      return JSON.parse(stored);
+    }
+  } catch {
+    // ignore
+  }
+  return initialDocuments.map((doc) => ({
+    ...doc,
+    schoolId,
+    period: "ganjil-2024/2025",
+  }));
+}
+
+export function saveDocuments(schoolId, docs) {
+  try {
+    const key = getDocumentsKey(schoolId);
+    localStorage.setItem(key, JSON.stringify(docs));
+  } catch {
+    // ignore
+  }
+}
+
 export const portalCategories = [
   {
     id: "ksp",
@@ -51,6 +92,8 @@ export const initialDocuments = [
     status: "verified",
     fileUrl:
       "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    schoolId: null,
+    period: "ganjil-2024/2025",
   },
   {
     id: "d2",
@@ -61,6 +104,8 @@ export const initialDocuments = [
     status: "pending",
     fileUrl:
       "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    schoolId: null,
+    period: "ganjil-2024/2025",
   },
   {
     id: "d3",
@@ -71,6 +116,8 @@ export const initialDocuments = [
     status: "revision",
     fileUrl:
       "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    schoolId: null,
+    period: "ganjil-2024/2025",
   },
 ];
 

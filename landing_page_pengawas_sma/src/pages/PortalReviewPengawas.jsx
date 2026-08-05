@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MaterialSymbol from "../components/MaterialSymbol.jsx";
 import WhatsappPreview from "../components/WhatsappPreview.jsx";
-import { portalInfo, portalCategories, statusMeta } from "../portalData.js";
+import { portalInfo, portalCategories, statusMeta, academicPeriods, loadDocuments, saveDocuments } from "../portalData.js";
 import { schools } from "../data.js";
 import { useNavigate } from "../router.jsx";
 import SideNavBar from "../components/portal/SideNavBar.jsx";
@@ -11,57 +11,6 @@ import RecentActivity from "../components/portal/RecentActivity.jsx";
 import LoginPortalSekolah from "../components/portal/LoginPortalSekolah.jsx";
 import { usePortalAuth } from "../hooks/usePortalAuth.js";
 import { useActiveSchool } from "../hooks/useActiveSchool.js";
-
-const reviewDocs = [
-  {
-    id: "r1",
-    title: "Laporan KOSP Semester 1",
-    subtitle: "Sesuai Peraturan No. 12/2024",
-    category: "ksp",
-    version: "V.2",
-    versionClass: "bg-primary-fixed text-on-primary-fixed-variant",
-    date: "12 Okt 2024",
-    status: "pending",
-    reviewerNote: "",
-    fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-  },
-  {
-    id: "r2",
-    title: "Anggaran ARKAS 2025",
-    subtitle: "Pengajuan Awal Tahun",
-    category: "arkas",
-    version: "V.1",
-    versionClass: "bg-surface-container-high text-on-surface-variant",
-    date: "15 Okt 2024",
-    status: "pending",
-    reviewerNote: "",
-    fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-  },
-  {
-    id: "r3",
-    title: "Evaluasi AKM Siswa",
-    subtitle: "Data Sampling Kelas XI",
-    category: "akm",
-    version: "V.1",
-    versionClass: "bg-surface-container-high text-on-surface-variant",
-    date: "08 Okt 2024",
-    status: "revision",
-    reviewerNote: "Halaman 12-14 kurang lengkap",
-    fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-  },
-  {
-    id: "r4",
-    title: "Rencana Peningkatan KKS",
-    subtitle: "Dokumen Perencanaan Berbasis Data",
-    category: "perencanaan",
-    version: "V.1",
-    versionClass: "bg-surface-container-high text-on-surface-variant",
-    date: "20 Okt 2024",
-    status: "draft",
-    reviewerNote: "",
-    fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-  },
-];
 
 function ReviewActions({ doc, onApprove, onRevision }) {
   return (
@@ -108,9 +57,13 @@ function ReviewActions({ doc, onApprove, onRevision }) {
   );
 }
 
-function ReviewTable({ documents, onApprove, onRevision }) {
-  const rows = documents.length
+function ReviewTable({ documents, selectedPeriod, onApprove, onRevision }) {
+  const filteredDocuments = selectedPeriod === "all"
     ? documents
+    : documents.filter((d) => d.period === selectedPeriod);
+
+  const rows = filteredDocuments.length
+    ? filteredDocuments
     : [
         {
           id: "empty",
@@ -210,9 +163,9 @@ function ReviewTable({ documents, onApprove, onRevision }) {
                   </td>
                   <td className="px-stack-lg py-5">
                     <span
-                      className={`px-2 py-1 rounded text-[10px] font-bold ${doc.versionClass}`}
+                      className={`px-2 py-1 rounded text-[10px] font-bold ${doc.versionClass ?? "bg-surface-container-high text-on-surface-variant"}`}
                     >
-                      {doc.version}
+                      {doc.version ?? "-"}
                     </span>
                   </td>
                   <td className="px-stack-lg py-5 text-body-md text-on-surface-variant">
@@ -275,10 +228,6 @@ function categoryIcon(category) {
 }
 
 export default function PortalReviewPengawas() {
-  const [documents, setDocuments] = useState(reviewDocs);
-  const [category] = useState("ksp");
-  const [waPreview, setWaPreview] = useState(null);
-
   const navigate = useNavigate();
   const { isLoggedIn, session } = usePortalAuth();
   const activeSchool = useActiveSchool();
@@ -286,6 +235,19 @@ export default function PortalReviewPengawas() {
   const schoolSlug = activeSchool?.slug ?? schools[0]?.slug;
   const school = activeSchool ?? schools[0];
   const schoolName = school?.name ?? portalInfo.school;
+
+  const [documents, setDocuments] = useState(() => loadDocuments(school.id));
+  const [selectedPeriod, setSelectedPeriod] = useState("all");
+  const [category] = useState("ksp");
+  const [waPreview, setWaPreview] = useState(null);
+
+  useEffect(() => {
+    setDocuments(loadDocuments(school.id));
+  }, [school.id]);
+
+  useEffect(() => {
+    saveDocuments(school.id, documents);
+  }, [documents, school.id]);
 
   if (!isLoggedIn) {
     return <LoginPortalSekolah schoolSlug={schoolSlug} />;
@@ -346,6 +308,8 @@ export default function PortalReviewPengawas() {
     setWaPreview(null);
   };
 
+  const handlePeriodChange = (e) => setSelectedPeriod(e.target.value);
+
   return (
     <>
         <SideNavBar school={school} schoolName={schoolName} />
@@ -359,15 +323,26 @@ export default function PortalReviewPengawas() {
               Verifikasi dan review dokumen satuan pendidikan
             </p>
           </div>
-          <div className="flex items-center gap-2 bg-surface-container-low px-4 py-2 rounded-lg border border-outline-variant">
-            <MaterialSymbol
-              icon="calendar_today"
-              className="text-primary"
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            />
-            <span className="text-label-md font-bold">
-              {portalInfo.semester}
-            </span>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 bg-surface-container-low px-4 py-2 rounded-lg border border-outline-variant">
+              <MaterialSymbol
+                icon="calendar_today"
+                className="text-primary"
+                style={{ fontVariationSettings: "'FILL' 1" }}
+              />
+              <select
+                value={selectedPeriod}
+                onChange={handlePeriodChange}
+                className="bg-transparent text-label-md font-bold text-on-surface focus:outline-none cursor-pointer"
+              >
+                <option value="all">Semua Periode</option>
+                {academicPeriods.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </header>
 
@@ -377,6 +352,7 @@ export default function PortalReviewPengawas() {
           <div className="col-span-8">
             <ReviewTable
               documents={documents}
+              selectedPeriod={selectedPeriod}
               onApprove={handleApprove}
               onRevision={handleRevision}
             />

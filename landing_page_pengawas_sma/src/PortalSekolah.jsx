@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MaterialSymbol from "./components/MaterialSymbol.jsx";
-import { portalInfo, initialDocuments } from "./portalData.js";
+import { portalInfo, academicPeriods, loadDocuments, saveDocuments } from "./portalData.js";
 import { schools } from "./data.js";
 import { sekolahCredentials } from "./data/sekolah.js";
 import { useNavigate } from "./router.jsx";
@@ -23,9 +23,18 @@ export default function PortalSekolah() {
   const school = activeSchool ?? schools[0];
   const schoolName = school?.name ?? portalInfo.school;
 
-  const [documents, setDocuments] = useState(initialDocuments);
+  const [documents, setDocuments] = useState(() => loadDocuments(school.id));
   const [category, setCategory] = useState("ksp");
   const [editingDoc, setEditingDoc] = useState(null);
+  const [period, setPeriod] = useState("ganjil-2024/2025");
+
+  useEffect(() => {
+    setDocuments(loadDocuments(school.id));
+  }, [school.id]);
+
+  useEffect(() => {
+    saveDocuments(school.id, documents);
+  }, [documents, school.id]);
 
   if (!isLoggedIn) {
     return <LoginPortalSekolah schoolSlug={schoolSlug} />;
@@ -43,8 +52,10 @@ export default function PortalSekolah() {
 
   const handleCategoryChange = (e) => setCategory(e.target.value);
 
+  const handlePeriodChange = (e) => setPeriod(e.target.value);
+
   const handleAddDocument = (doc) => {
-    setDocuments((prev) => [doc, ...prev]);
+    setDocuments((prev) => [{ ...doc, schoolId: school.id, period }, ...prev]);
   };
 
   const handleEditDocument = (doc) => {
@@ -54,7 +65,7 @@ export default function PortalSekolah() {
 
   const handleUpdateDocument = (updatedDoc) => {
     setDocuments((prev) =>
-      prev.map((d) => (d.id === updatedDoc.id ? updatedDoc : d)),
+      prev.map((d) => (d.id === updatedDoc.id ? { ...updatedDoc, schoolId: school.id, period } : d))
     );
     setEditingDoc(null);
   };
@@ -84,15 +95,25 @@ export default function PortalSekolah() {
               {portalInfo.subtitle}
             </p>
           </div>
-          <div className="flex items-center gap-2 bg-surface-container-low px-4 py-2 rounded-lg border border-outline-variant">
-            <MaterialSymbol
-              icon="calendar_today"
-              className="text-primary"
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            />
-            <span className="text-label-md font-bold">
-              {portalInfo.semester}
-            </span>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 bg-surface-container-low px-4 py-2 rounded-lg border border-outline-variant">
+              <MaterialSymbol
+                icon="calendar_today"
+                className="text-primary"
+                style={{ fontVariationSettings: "'FILL' 1" }}
+              />
+              <select
+                value={period}
+                onChange={handlePeriodChange}
+                className="bg-transparent text-label-md font-bold text-on-surface focus:outline-none cursor-pointer"
+              >
+                {academicPeriods.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </header>
 
