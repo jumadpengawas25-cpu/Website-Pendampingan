@@ -85,7 +85,11 @@ export default function JurnalPendampingan() {
     return () => clearInterval(interval);
   }, [schoolSlug]);
 
-  const filtered = entries.filter((entry) => entry.sekolahSlug === schoolSlug);
+  const filtered = entries
+    .filter((entry) => entry.sekolahSlug === schoolSlug)
+    .map((entry) =>
+      entry.status === "menunggu" ? { ...entry, status: "diterima" } : entry
+    );
 
   const totalFrekuensi = filtered.length;
 
@@ -102,15 +106,6 @@ export default function JurnalPendampingan() {
   const focusBgs = ["bg-primary-fixed/30", "bg-emerald-50", "bg-amber-50", "bg-violet-50"];
 
   const upcomingAgenda = MOCK_UPCOMING;
-
-  const handleConfirm = (entryId) => {
-    const updated = entries.map((e) =>
-      e.id === entryId ? { ...e, status: "diterima", confirmedAt: Date.now() } : e
-    );
-    setEntries(updated);
-    savePortalLogbooks(updated);
-    setSelectedEntry(null);
-  };
 
   const handleSubmitRtl = () => {
     if (!selectedEntry || !rtlText.trim()) return;
@@ -386,16 +381,6 @@ export default function JurnalPendampingan() {
                             <span className={`status-pill ${statusClass(status)} w-fit`}>
                               {statusLabel(status)}
                             </span>
-                            {status === "menunggu" && (
-                              <button
-                                type="button"
-                                onClick={() => handleConfirm(entry.id)}
-                                className="flex items-center gap-1 px-3 py-1.5 bg-emerald-600 text-white rounded-lg text-label-sm font-bold hover:opacity-90 transition-opacity w-fit"
-                              >
-                                <MaterialSymbol icon="check_circle" />
-                                Konfirmasi Penerimaan
-                              </button>
-                            )}
                             {status === "diterima" && !hasRtl && (
                               <button
                                 type="button"
