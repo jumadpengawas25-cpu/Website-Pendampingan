@@ -61,10 +61,11 @@ export default function LogbookPendampingan() {
       proses: "status-pending",
     })[s] ?? "status-draft";
 
-  const handleSave = () => {
+  const handleSubmitLogbook = (e) => {
+    e.preventDefault();
     if (!formData.sekolah || !formData.tanggal || !formData.kegiatan) return;
     const newEntry = {
-      id: "lb_" + Date.now(),
+      id: Date.now().toString(),
       sekolah: school.name,
       sekolahSlug: schoolSlug,
       tanggal: formData.tanggal,
@@ -183,79 +184,81 @@ export default function LogbookPendampingan() {
           </div>
 
           {showForm && (
-            <div className="p-stack-lg border-b border-outline-variant/30">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
-                <div>
-                  <label className="block font-label-md text-on-surface mb-1.5">Nama Sekolah Binaan</label>
-                  <select
-                    value={formData.sekolah}
-                    onChange={(e) => setFormData((p) => ({ ...p, sekolah: e.target.value }))}
-                    className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface focus:outline-none focus:border-primary"
-                    required
-                  >
-                    <option value="">Pilih Sekolah Binaan</option>
-                    {schools.map((s) => (
-                      <option key={s.slug} value={s.name}>{s.name}</option>
-                    ))}
-                  </select>
+            <form onSubmit={handleSubmitLogbook}>
+              <div className="p-stack-lg border-b border-outline-variant/30">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+                  <div>
+                    <label className="block font-label-md text-on-surface mb-1.5">Nama Sekolah Binaan</label>
+                    <select
+                      value={formData.sekolah}
+                      onChange={(e) => setFormData((p) => ({ ...p, sekolah: e.target.value }))}
+                      className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface focus:outline-none focus:border-primary"
+                      required
+                    >
+                      <option value="">Pilih Sekolah Binaan</option>
+                      {schools.map((s) => (
+                        <option key={s.slug} value={s.name}>{s.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block font-label-md text-on-surface mb-1.5">Hari / Tanggal</label>
+                    <input
+                      type="date"
+                      value={formData.tanggal}
+                      onChange={(e) => setFormData((p) => ({ ...p, tanggal: e.target.value }))}
+                      className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface focus:outline-none focus:border-primary"
+                      required
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block font-label-md text-on-surface mb-1.5">Kegiatan</label>
+                    <input
+                      type="text"
+                      value={formData.kegiatan}
+                      onChange={(e) => setFormData((p) => ({ ...p, kegiatan: e.target.value }))}
+                      placeholder="Contoh: Konsultasi Implementasi KOSP"
+                      className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary"
+                      required
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block font-label-md text-on-surface mb-1.5">Capaian Pendampingan</label>
+                    <textarea
+                      value={formData.capaian}
+                      onChange={(e) => setFormData((p) => ({ ...p, capaian: e.target.value }))}
+                      placeholder="Tulis capaian pendampingan..."
+                      rows={3}
+                      className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary resize-none"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block font-label-md text-on-surface mb-1.5">Kendala</label>
+                    <textarea
+                      value={formData.kendala}
+                      onChange={(e) => setFormData((p) => ({ ...p, kendala: e.target.value }))}
+                      placeholder="Tulis kendala yang ditemui..."
+                      rows={2}
+                      className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary resize-none"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block font-label-md text-on-surface mb-1.5">Solusi / Tindak Lanjut</label>
+                    <textarea
+                      value={formData.solusi}
+                      onChange={(e) => setFormData((p) => ({ ...p, solusi: e.target.value }))}
+                      placeholder="Tulis solusi atau tindak lanjut..."
+                      rows={2}
+                      className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary resize-none"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className="block font-label-md text-on-surface mb-1.5">Hari / Tanggal</label>
-                  <input
-                    type="date"
-                    value={formData.tanggal}
-                    onChange={(e) => setFormData((p) => ({ ...p, tanggal: e.target.value }))}
-                    className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface focus:outline-none focus:border-primary"
-                    required
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block font-label-md text-on-surface mb-1.5">Kegiatan</label>
-                  <input
-                    type="text"
-                    value={formData.kegiatan}
-                    onChange={(e) => setFormData((p) => ({ ...p, kegiatan: e.target.value }))}
-                    placeholder="Contoh: Konsultasi Implementasi KOSP"
-                    className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary"
-                    required
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block font-label-md text-on-surface mb-1.5">Capaian Pendampingan</label>
-                  <textarea
-                    value={formData.capaian}
-                    onChange={(e) => setFormData((p) => ({ ...p, capaian: e.target.value }))}
-                    placeholder="Tulis capaian pendampingan..."
-                    rows={3}
-                    className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary resize-none"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block font-label-md text-on-surface mb-1.5">Kendala</label>
-                  <textarea
-                    value={formData.kendala}
-                    onChange={(e) => setFormData((p) => ({ ...p, kendala: e.target.value }))}
-                    placeholder="Tulis kendala yang ditemui..."
-                    rows={2}
-                    className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary resize-none"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block font-label-md text-on-surface mb-1.5">Solusi / Tindak Lanjut</label>
-                  <textarea
-                    value={formData.solusi}
-                    onChange={(e) => setFormData((p) => ({ ...p, solusi: e.target.value }))}
-                    placeholder="Tulis solusi atau tindak lanjut..."
-                    rows={2}
-                    className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary resize-none"
-                  />
+                <div className="flex justify-end gap-3 mt-4">
+                  <button type="button" onClick={() => { setShowForm(false); setFormData({ sekolah: "", tanggal: "", kegiatan: "", capaian: "", kendala: "", solusi: "" }); }} className="px-6 py-3 border border-outline-variant rounded-lg font-bold text-on-surface-variant hover:bg-surface-container-highest">Batal</button>
+                  <button type="submit" className="px-6 py-3 bg-primary text-on-primary rounded-lg font-bold hover:opacity-90 transition-opacity">Simpan</button>
                 </div>
               </div>
-              <div className="flex justify-end gap-3 mt-4">
-                <button type="button" onClick={() => { setShowForm(false); setFormData({ sekolah: "", tanggal: "", kegiatan: "", capaian: "", kendala: "", solusi: "" }); }} className="px-6 py-3 border border-outline-variant rounded-lg font-bold text-on-surface-variant hover:bg-surface-container-highest">Batal</button>
-                <button type="button" onClick={handleSave} className="px-6 py-3 bg-primary text-on-primary rounded-lg font-bold hover:opacity-90 transition-opacity">Simpan</button>
-              </div>
-            </div>
+            </form>
           )}
         </section>
 

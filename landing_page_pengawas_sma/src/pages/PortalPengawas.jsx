@@ -333,13 +333,15 @@ function LogbookPengawas({ schools }) {
   const [entries, setEntries] = useState(() => loadLogbook());
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
-    sekolah: "",
+    sekolah: schools[0]?.slug ?? "",
     tanggal: "",
     kegiatan: "",
     capaian: "",
     kendala: "",
     solusi: "",
   });
+  const [rekapBulan, setRekapBulan] = useState("");
+  const [rekapTahun, setRekapTahun] = useState(new Date().getFullYear().toString());
 
   useEffect(() => {
     setEntries(loadLogbook());
@@ -351,12 +353,14 @@ function LogbookPengawas({ schools }) {
     (entry) => entry.sekolahSlug === selectedSchool,
   );
 
-  const handleSave = () => {
+  const handleSubmitLogbook = (e) => {
+    e.preventDefault();
     if (!formData.sekolah || !formData.tanggal || !formData.kegiatan) return;
+    const schoolData = schools.find((s) => s.slug === formData.sekolah) || schools[0];
     const newEntry = {
-      id: "lb_" + Date.now(),
-      sekolah: school.name,
-      sekolahSlug: selectedSchool,
+      id: Date.now().toString(),
+      sekolah: schoolData.name,
+      sekolahSlug: formData.sekolah,
       tanggal: formData.tanggal,
       kegiatan: formData.kegiatan,
       capaian: formData.capaian,
@@ -367,7 +371,7 @@ function LogbookPengawas({ schools }) {
     const updated = [newEntry, ...entries];
     setEntries(updated);
     saveLogbook(updated);
-    setFormData({ sekolah: "", tanggal: "", kegiatan: "", capaian: "", kendala: "", solusi: "" });
+    setFormData({ sekolah: formData.sekolah, tanggal: "", kegiatan: "", capaian: "", kendala: "", solusi: "" });
     setShowForm(false);
   };
 
@@ -376,6 +380,98 @@ function LogbookPengawas({ schools }) {
     setEntries(updated);
     saveLogbook(updated);
   };
+
+  const handlePrintRecap = () => {
+    const bulan = parseInt(rekapBulan, 10);
+    const tahun = parseInt(rekapTahun, 10);
+    if (!bulan || !tahun) {
+      alert("Pilih bulan dan tahun terlebih dahulu");
+      return;
+    }
+    const filtered = entries.filter((entry) => {
+      const entryDate = new Date(entry.tanggal);
+      return entryDate.getMonth() + 1 === bulan && entryDate.getFullYear() === tahun && entry.sekolahSlug === selectedSchool;
+    });
+
+    const bulanLabel = new Date(tahun, bulan - 1).toLocaleString("id-ID", { month: "long", year: "numeric" });
+
+    const rows = filtered.map((entry, idx) => `
+      <tr>
+        <td style="text-align:center;width:40px;">${idx + 1}</td>
+        <td>${entry.sekolah}</td>
+        <td>${entry.tanggal}</td>
+        <td>${entry.kegiatan}</td>
+        <td>${entry.capaian || "-"}</td>
+        <td>${entry.kendala || "-"}</td>
+        <td>${entry.solusi || "-"}</td>
+      </tr>
+    `).join("");
+
+    const printContent = `
+      <html>
+        <head>
+          <title>Rekap Logbook - ${bulanLabel}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 24px; color: #000; }
+            .header { text-align: center; margin-bottom: 16px; }
+            .header h1 { font-size: 16px; margin-bottom: 6px; text-transform: uppercase; }
+            .header p { font-size: 12px; margin: 2px 0; }
+            table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+            th, td { border: 1px solid #000; padding: 6px; text-align: left; font-size: 11px; vertical-align: top; }
+            th { background-color: #f0f0f0; font-weight: bold; }
+            .signature { margin-top: 48px; display: flex; justify-content: flex-end; }
+            .signature .box { width: 240px; text-align: center; }
+            .signature .box p { margin: 0; font-size: 12px; }
+            .signature .box .line { margin-top: 56px; border-top: 1px solid #000; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>REKAPITULASI LOGBOOK PENDAMPINGAN PENGAWAS SMA KABUPATEN MALANG</h1>
+            <p>Periode: ${bulanLabel}</p>
+            <p>Sekolah: ${school.name}</p>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:40px;">No</th>
+                <th>Nama Sekolah</th>
+                <th>Hari/Tanggal</th>
+                <th>Kegiatan</th>
+                <th>Capaian</th>
+                <th>Kendala</th>
+                <th>Solusi/Tindak Lanjut</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${filtered.length === 0 ? `<tr><td colspan="7" style="text-align:center;">Tidak ada data</td></tr>` : rows}
+            </tbody>
+          </table>
+          <div class="signature">
+            <div class="box">
+              <p>Pengawas SMA Kab. Malang</p>
+              <div class="line"></div>
+              <p><u>${school.name}</u></p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    const win = window.open("", "_blank");
+    if (win) {
+      win.document.write(printContent);
+      win.document.close();
+      setTimeout(() => win.print(), 300);
+    } else {
+      alert("Popup diblokir oleh browser. Izinkan popup untuk mencetak.");
+    }
+  };
+
+  const bulanOptions = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+  ];
 
   return (
     <section className="space-y-gutter">
@@ -406,81 +502,128 @@ function LogbookPengawas({ schools }) {
       </div>
 
       {showForm && (
-        <div className="bg-surface-container-lowest rounded-xl p-stack-lg shadow-sm border border-outline-variant/50">
-          <h3 className="font-title-md text-title-md text-on-surface mb-stack-md">Form Catat Pendampingan</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
-            <div>
-              <label className="block font-label-md text-on-surface mb-1.5">Nama Sekolah Binaan</label>
-              <select
-                value={formData.sekolah}
-                onChange={(e) => setFormData((p) => ({ ...p, sekolah: e.target.value }))}
-                className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface focus:outline-none focus:border-primary"
-                required
-              >
-                <option value="">Pilih Sekolah Binaan</option>
-                {schools.map((s) => (
-                  <option key={s.slug} value={s.name}>{s.name}</option>
-                ))}
-              </select>
+        <form onSubmit={handleSubmitLogbook}>
+          <div className="bg-surface-container-lowest rounded-xl p-stack-lg shadow-sm border border-outline-variant/50">
+            <h3 className="font-title-md text-title-md text-on-surface mb-stack-md">Form Catat Pendampingan</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+              <div>
+                <label className="block font-label-md text-on-surface mb-1.5">Nama Sekolah Binaan</label>
+                <select
+                  value={formData.sekolah}
+                  onChange={(e) => {
+                    setFormData((p) => ({ ...p, sekolah: e.target.value }));
+                    setSelectedSchool(e.target.value);
+                  }}
+                  className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface focus:outline-none focus:border-primary"
+                  required
+                >
+                  <option value="">Pilih Sekolah Binaan</option>
+                  {schools.map((s) => (
+                    <option key={s.slug} value={s.slug}>{s.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block font-label-md text-on-surface mb-1.5">Hari / Tanggal</label>
+                <input
+                  type="date"
+                  value={formData.tanggal}
+                  onChange={(e) => setFormData((p) => ({ ...p, tanggal: e.target.value }))}
+                  className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface focus:outline-none focus:border-primary"
+                  required
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block font-label-md text-on-surface mb-1.5">Kegiatan</label>
+                <input
+                  type="text"
+                  value={formData.kegiatan}
+                  onChange={(e) => setFormData((p) => ({ ...p, kegiatan: e.target.value }))}
+                  placeholder="Contoh: Konsultasi Implementasi KOSP"
+                  className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary"
+                  required
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block font-label-md text-on-surface mb-1.5">Capaian Pendampingan</label>
+                <textarea
+                  value={formData.capaian}
+                  onChange={(e) => setFormData((p) => ({ ...p, capaian: e.target.value }))}
+                  placeholder="Tulis capaian pendampingan..."
+                  rows={3}
+                  className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary resize-none"
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block font-label-md text-on-surface mb-1.5">Kendala</label>
+                <textarea
+                  value={formData.kendala}
+                  onChange={(e) => setFormData((p) => ({ ...p, kendala: e.target.value }))}
+                  placeholder="Tulis kendala yang ditemui..."
+                  rows={2}
+                  className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary resize-none"
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block font-label-md text-on-surface mb-1.5">Solusi / Tindak Lanjut</label>
+                <textarea
+                  value={formData.solusi}
+                  onChange={(e) => setFormData((p) => ({ ...p, solusi: e.target.value }))}
+                  placeholder="Tulis solusi atau tindak lanjut..."
+                  rows={2}
+                  className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary resize-none"
+                />
+              </div>
             </div>
-            <div>
-              <label className="block font-label-md text-on-surface mb-1.5">Hari / Tanggal</label>
-              <input
-                type="date"
-                value={formData.tanggal}
-                onChange={(e) => setFormData((p) => ({ ...p, tanggal: e.target.value }))}
-                className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface focus:outline-none focus:border-primary"
-                required
-              />
-            </div>
-            <div className="md:col-span-2">
-              <label className="block font-label-md text-on-surface mb-1.5">Kegiatan</label>
-              <input
-                type="text"
-                value={formData.kegiatan}
-                onChange={(e) => setFormData((p) => ({ ...p, kegiatan: e.target.value }))}
-                placeholder="Contoh: Konsultasi Implementasi KOSP"
-                className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary"
-                required
-              />
-            </div>
-            <div className="md:col-span-2">
-              <label className="block font-label-md text-on-surface mb-1.5">Capaian Pendampingan</label>
-              <textarea
-                value={formData.capaian}
-                onChange={(e) => setFormData((p) => ({ ...p, capaian: e.target.value }))}
-                placeholder="Tulis capaian pendampingan..."
-                rows={3}
-                className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary resize-none"
-              />
-            </div>
-            <div className="md:col-span-2">
-              <label className="block font-label-md text-on-surface mb-1.5">Kendala</label>
-              <textarea
-                value={formData.kendala}
-                onChange={(e) => setFormData((p) => ({ ...p, kendala: e.target.value }))}
-                placeholder="Tulis kendala yang ditemui..."
-                rows={2}
-                className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary resize-none"
-              />
-            </div>
-            <div className="md:col-span-2">
-              <label className="block font-label-md text-on-surface mb-1.5">Solusi / Tindak Lanjut</label>
-              <textarea
-                value={formData.solusi}
-                onChange={(e) => setFormData((p) => ({ ...p, solusi: e.target.value }))}
-                placeholder="Tulis solusi atau tindak lanjut..."
-                rows={2}
-                className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary resize-none"
-              />
+            <div className="flex justify-end gap-3 mt-4">
+              <button type="button" onClick={() => { setShowForm(false); setFormData({ sekolah: selectedSchool, tanggal: "", kegiatan: "", capaian: "", kendala: "", solusi: "" }); }} className="px-6 py-3 border border-outline-variant rounded-lg font-bold text-on-surface-variant hover:bg-surface-container-highest">Batal</button>
+              <button type="submit" className="px-6 py-3 bg-primary text-on-primary rounded-lg font-bold hover:opacity-90 transition-opacity">Simpan</button>
             </div>
           </div>
-          <div className="flex justify-end gap-3 mt-4">
-            <button type="button" onClick={() => { setShowForm(false); setFormData({ sekolah: "", tanggal: "", kegiatan: "", capaian: "", kendala: "", solusi: "" }); }} className="px-6 py-3 border border-outline-variant rounded-lg font-bold text-on-surface-variant hover:bg-surface-container-highest">Batal</button>
-            <button type="button" onClick={handleSave} className="px-6 py-3 bg-primary text-on-primary rounded-lg font-bold hover:opacity-90 transition-opacity">Simpan</button>
-          </div>
-        </div>
+        </form>
       )}
+
+      <section className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden mb-stack-lg">
+        <div className="p-stack-lg border-b border-outline-variant/30">
+          <h3 className="font-title-md text-title-md text-on-surface">Rekap Bulanan Logbook Pendampingan</h3>
+        </div>
+        <div className="p-stack-lg flex flex-col sm:flex-row gap-3 items-start sm:items-end">
+          <div>
+            <label className="block font-label-md text-on-surface mb-1.5">Pilih Bulan</label>
+            <select
+              value={rekapBulan}
+              onChange={(e) => setRekapBulan(e.target.value)}
+              className="bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2 text-label-md text-on-surface focus:outline-none focus:border-primary"
+            >
+              <option value="">- Pilih Bulan -</option>
+              {bulanOptions.map((b, idx) => (
+                <option key={b} value={idx + 1}>{b}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block font-label-md text-on-surface mb-1.5">Pilih Tahun</label>
+            <select
+              value={rekapTahun}
+              onChange={(e) => setRekapTahun(e.target.value)}
+              className="bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2 text-label-md text-on-surface focus:outline-none focus:border-primary"
+            >
+              <option value="">- Pilih Tahun -</option>
+              {[2025, 2026, 2027].map((t) => (
+                <option key={t} value={t}>{t}</option>
+              ))}
+            </select>
+          </div>
+          <button
+            type="button"
+            onClick={handlePrintRecap}
+            className="flex items-center gap-2 px-4 py-2 bg-secondary text-on-secondary rounded-lg font-bold text-label-md hover:opacity-90 transition-opacity"
+          >
+            <MaterialSymbol icon="print" />
+            Download / Cetak Rekap PDF
+          </button>
+        </div>
+      </section>
 
       <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
         <div className="p-stack-lg border-b border-outline-variant/30">
@@ -666,7 +809,7 @@ function Supervisi({ schools }) {
 
       <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
         <div className="p-stack-lg border-b border-outline-variant/30">
-          <h3 className="font-title-md text-title-md text-on-surface">Catatan Hasil Supervisi - {school.name}</h3>
+          <h3 className="font-title-md text-title-md text-on-surface">Riwayat Pendampingan - {school.name}</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
