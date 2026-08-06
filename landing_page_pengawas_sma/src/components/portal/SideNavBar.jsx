@@ -33,11 +33,6 @@ export default function SideNavBar({ school, schoolName }) {
     { label: "Dashboard", icon: "dashboard", href: "#" },
     { label: "Verification", icon: "verified_user", href: portalHref },
     { label: "Review", icon: "verified_user", href: reviewHref },
-    {
-      label: "Logbook",
-      icon: "menu_book",
-      href: schoolSlug ? `/logbook/${schoolSlug}` : "/logbook",
-    },
     { label: "Ubah Password", icon: "lock", action: "password" },
   ];
 

@@ -9,7 +9,6 @@ const navLinks = [
   { label: "Profile", href: "#profile" },
   { label: "Sekolah", href: "#schools" },
   { label: "Berita", href: "#news" },
-  { label: "Logbook", href: "/logbook" },
   { label: "Portal Sekolah", href: `/login-portal` },
   { label: "Portal Pengawas", href: `/login-pengawas` },
 ];
