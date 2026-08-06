@@ -4,7 +4,7 @@ import { matchRoute } from "../../router.jsx";
 import MaterialSymbol from "../MaterialSymbol.jsx";
 import { portalInfo } from "../../portalData.js";
 
-export default function SideNavBar({ school, schoolName }) {
+export default function SideNavBar({ school, schoolName, activeTab, setActiveTab }) {
   const path = useLocation();
   const params = useParams();
   const schoolSlug = school?.slug ?? params.school ?? null;
@@ -33,7 +33,8 @@ export default function SideNavBar({ school, schoolName }) {
   };
 
   const navLinks = [
-    { label: "Dashboard", icon: "dashboard", href: "#" },
+    { label: "Dashboard", icon: "dashboard", action: "dashboard" },
+    { label: "Dokumen", icon: "folder_open", action: "documents" },
     { label: "Verification", icon: "verified_user", href: portalHref },
     { label: "Review", icon: "verified_user", href: reviewHref },
     { label: "Jurnal Pendampingan", icon: "menu_book", href: jurnalHref },
@@ -51,6 +52,31 @@ export default function SideNavBar({ school, schoolName }) {
 
       <div className="flex flex-col px-stack-md space-y-2 flex-grow">
         {navLinks.map((item) => {
+          if (item.action === "dashboard" || item.action === "documents") {
+            const isActive = activeTab === item.action;
+            return (
+              <button
+                key={item.label}
+                type="button"
+                onClick={() => setActiveTab?.(item.action)}
+                className={
+                  isActive
+                    ? "flex items-center gap-3 py-3 px-4 text-primary font-bold border-l-4 border-primary bg-surface-container-low transition-all rounded-lg"
+                    : "flex items-center gap-3 py-3 px-4 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg group w-full text-left"
+                }
+              >
+                <MaterialSymbol
+                  icon={item.icon}
+                  className={
+                    isActive ? "text-primary" : "text-on-surface-variant"
+                  }
+                />
+                <span className="font-label-md text-label-md">
+                  {item.label}
+                </span>
+              </button>
+            );
+          }
           if (item.action === "password") {
             return (
               <button
