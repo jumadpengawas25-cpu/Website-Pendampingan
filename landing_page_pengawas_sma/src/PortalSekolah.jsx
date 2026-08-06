@@ -14,6 +14,16 @@ import LoginPortalSekolah from "./components/portal/LoginPortalSekolah.jsx";
 import { usePortalAuth } from "./hooks/usePortalAuth.js";
 import { useActiveSchool } from "./hooks/useActiveSchool.js";
 
+function loadPortalLogbooks() {
+  try {
+    const stored = localStorage.getItem("portal_logbooks");
+    if (stored) return JSON.parse(stored);
+  } catch {
+    // ignore
+  }
+  return [];
+}
+
 export default function PortalSekolah() {
   const navigate = useNavigate();
   const { isLoggedIn, logout, session } = usePortalAuth();
@@ -24,6 +34,7 @@ export default function PortalSekolah() {
   const schoolName = school?.name ?? portalInfo.school;
 
   const [documents, setDocuments] = useState(() => loadDocuments(school.id));
+  const [logbookEntries, setLogbookEntries] = useState(() => loadPortalLogbooks());
   const [category, setCategory] = useState("ksp");
   const [editingDoc, setEditingDoc] = useState(null);
   const [period, setPeriod] = useState("ganjil-2024/2025");
@@ -35,6 +46,18 @@ export default function PortalSekolah() {
   useEffect(() => {
     saveDocuments(school.id, documents);
   }, [documents, school.id]);
+
+  useEffect(() => {
+    setLogbookEntries(loadPortalLogbooks());
+    const interval = setInterval(() => {
+      setLogbookEntries(loadPortalLogbooks());
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [school.id]);
+
+  const filteredLogbook = logbookEntries.filter(
+    (entry) => entry.sekolahSlug === schoolSlug,
+  );
 
   if (!isLoggedIn) {
     return <LoginPortalSekolah schoolSlug={schoolSlug} />;
@@ -165,6 +188,66 @@ export default function PortalSekolah() {
           onDelete={handleDelete}
           onEditDocument={handleEditDocument}
         />
+
+        <section className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden mt-stack-lg">
+          <div className="p-stack-lg border-b border-outline-variant/30 flex justify-between items-center">
+            <h3 className="font-title-md text-title-md text-on-surface">
+              Logbook Pendampingan
+            </h3>
+            <span className="text-label-sm text-on-surface-variant">
+              {filteredLogbook.length} entri
+            </span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead className="bg-surface-container-low">
+                <tr>
+                  {["Hari / Tanggal", "Kegiatan", "Capaian Pendampingan", "Kendala", "Solusi / Tindak Lanjut"].map((h) => (
+                    <th
+                      key={h}
+                      className="px-stack-lg py-4 font-label-md text-on-surface-variant uppercase tracking-wider"
+                    >
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-outline-variant/30">
+                {filteredLogbook.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="px-stack-lg py-8 text-center text-on-surface-variant">
+                      <MaterialSymbol icon="event_busy" className="text-4xl text-outline mb-2" />
+                      <p className="text-label-md">Belum ada catatan pendampingan</p>
+                    </td>
+                  </tr>
+                ) : (
+                  filteredLogbook.map((entry) => (
+                    <tr
+                      key={entry.id}
+                      className="hover:bg-surface-container-lowest transition-colors"
+                    >
+                      <td className="px-stack-lg py-5 text-body-md text-on-surface-variant">
+                        {entry.tanggal}
+                      </td>
+                      <td className="px-stack-lg py-5 text-body-md text-on-surface font-medium">
+                        {entry.kegiatan}
+                      </td>
+                      <td className="px-stack-lg py-5 text-body-md text-on-surface-variant max-w-[200px] truncate">
+                        {entry.capaian || "-"}
+                      </td>
+                      <td className="px-stack-lg py-5 text-body-md text-on-surface-variant max-w-[150px] truncate">
+                        {entry.kendala || "-"}
+                      </td>
+                      <td className="px-stack-lg py-5 text-body-md text-on-surface-variant max-w-[150px] truncate">
+                        {entry.solusi || "-"}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
 
         <footer className="mt-stack-lg pt-stack-lg border-t border-outline-variant grid grid-cols-1 md:grid-cols-3 gap-gutter text-on-surface-variant">
           <div className="col-span-1">

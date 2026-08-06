@@ -5,17 +5,12 @@ import { loadDocuments, saveDocuments, academicPeriods } from "../portalData.js"
 import { usePengawasAuth } from "../hooks/usePengawasAuth.js";
 import { useNavigate } from "../router.jsx";
 
-const STORAGE_PREFIX = "pengawas_logbook_";
-const SUPERVISI_STORAGE_KEY = "pengawas_supervisi";
+const STORAGE_PREFIX = "portal_logbooks";
+const SUPERVISI_STORAGE_KEY = "supervision_schedules";
 
-function getLogbookKey(schoolSlug) {
-  return `${STORAGE_PREFIX}${schoolSlug}`;
-}
-
-function loadLogbook(schoolSlug) {
+function loadLogbook() {
   try {
-    const key = getLogbookKey(schoolSlug);
-    const stored = localStorage.getItem(key);
+    const stored = localStorage.getItem(STORAGE_PREFIX);
     if (stored) return JSON.parse(stored);
   } catch {
     // ignore
@@ -23,10 +18,9 @@ function loadLogbook(schoolSlug) {
   return [];
 }
 
-function saveLogbook(schoolSlug, entries) {
+function saveLogbook(entries) {
   try {
-    const key = getLogbookKey(schoolSlug);
-    localStorage.setItem(key, JSON.stringify(entries));
+    localStorage.setItem(STORAGE_PREFIX, JSON.stringify(entries));
   } catch {
     // ignore
   }
@@ -55,7 +49,7 @@ function Dashboard({ schools }) {
   const allDocs = schools.flatMap((s) => loadDocuments(s.id));
   const totalDocs = allDocs.length;
   const unverifiedDocs = allDocs.filter((d) => d.status !== "verified").length;
-  const totalLogbook = schools.reduce((acc, s) => acc + loadLogbook(s.slug).length, 0);
+  const totalLogbook = loadLogbook().length;
 
   const stats = [
     { label: "Sekolah Binaan", value: totalSchools, icon: "school", color: "text-primary" },
@@ -336,43 +330,51 @@ function ReviewDokumen({ schools }) {
 
 function LogbookPengawas({ schools }) {
   const [selectedSchool, setSelectedSchool] = useState(schools[0]?.slug);
-  const [entries, setEntries] = useState(() => loadLogbook(schools[0]?.slug));
+  const [entries, setEntries] = useState(() => loadLogbook());
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
+    sekolah: "",
     tanggal: "",
-    fokusPendampingan: "",
-    catatanHasil: "",
-    umpanBalik: "",
+    kegiatan: "",
+    capaian: "",
+    kendala: "",
+    solusi: "",
   });
 
   useEffect(() => {
-    setEntries(loadLogbook(selectedSchool));
-  }, [selectedSchool]);
+    setEntries(loadLogbook());
+  }, []);
 
   const school = schools.find((s) => s.slug === selectedSchool) || schools[0];
 
+  const filteredEntries = entries.filter(
+    (entry) => entry.sekolahSlug === selectedSchool,
+  );
+
   const handleSave = () => {
-    if (!formData.tanggal || !formData.fokusPendampingan) return;
+    if (!formData.sekolah || !formData.tanggal || !formData.kegiatan) return;
     const newEntry = {
       id: "lb_" + Date.now(),
       sekolah: school.name,
+      sekolahSlug: selectedSchool,
       tanggal: formData.tanggal,
-      fokusPendampingan: formData.fokusPendampingan,
-      catatanHasil: formData.catatanHasil,
-      umpanBalik: formData.umpanBalik,
+      kegiatan: formData.kegiatan,
+      capaian: formData.capaian,
+      kendala: formData.kendala,
+      solusi: formData.solusi,
       createdAt: Date.now(),
     };
     const updated = [newEntry, ...entries];
     setEntries(updated);
-    saveLogbook(selectedSchool, updated);
-    setFormData({ tanggal: "", fokusPendampingan: "", catatanHasil: "", umpanBalik: "" });
+    saveLogbook(updated);
+    setFormData({ sekolah: "", tanggal: "", kegiatan: "", capaian: "", kendala: "", solusi: "" });
     setShowForm(false);
   };
 
   const handleDelete = (id) => {
     const updated = entries.filter((e) => e.id !== id);
     setEntries(updated);
-    saveLogbook(selectedSchool, updated);
+    saveLogbook(updated);
   };
 
   return (
@@ -398,38 +400,83 @@ function LogbookPengawas({ schools }) {
             className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg font-bold text-label-md hover:opacity-90 transition-opacity"
           >
             <MaterialSymbol icon="add" />
-            Catat Kunjungan
+            + Catat Pendampingan
           </button>
         </div>
       </div>
 
       {showForm && (
         <div className="bg-surface-container-lowest rounded-xl p-stack-lg shadow-sm border border-outline-variant/50">
-          <h3 className="font-title-md text-title-md text-on-surface mb-stack-md">Form Catatan Kunjungan / Pendampingan</h3>
+          <h3 className="font-title-md text-title-md text-on-surface mb-stack-md">Form Catat Pendampingan</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
             <div>
-              <label className="block font-label-md text-on-surface mb-1.5">Pilih Sekolah Binaan</label>
-              <input type="text" value={school.name} readOnly className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface" />
+              <label className="block font-label-md text-on-surface mb-1.5">Nama Sekolah Binaan</label>
+              <select
+                value={formData.sekolah}
+                onChange={(e) => setFormData((p) => ({ ...p, sekolah: e.target.value }))}
+                className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface focus:outline-none focus:border-primary"
+                required
+              >
+                <option value="">Pilih Sekolah Binaan</option>
+                {schools.map((s) => (
+                  <option key={s.slug} value={s.name}>{s.name}</option>
+                ))}
+              </select>
             </div>
             <div>
-              <label className="block font-label-md text-on-surface mb-1.5">Tanggal Kunjungan</label>
-              <input type="date" value={formData.tanggal} onChange={(e) => setFormData((p) => ({ ...p, tanggal: e.target.value }))} className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface focus:outline-none focus:border-primary" required />
+              <label className="block font-label-md text-on-surface mb-1.5">Hari / Tanggal</label>
+              <input
+                type="date"
+                value={formData.tanggal}
+                onChange={(e) => setFormData((p) => ({ ...p, tanggal: e.target.value }))}
+                className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface focus:outline-none focus:border-primary"
+                required
+              />
             </div>
             <div className="md:col-span-2">
-              <label className="block font-label-md text-on-surface mb-1.5">Fokus Pendampingan</label>
-              <input type="text" value={formData.fokusPendampingan} onChange={(e) => setFormData((p) => ({ ...p, fokusPendampingan: e.target.value }))} placeholder="Contoh: Konsultasi Implementasi KOSP" className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary" required />
+              <label className="block font-label-md text-on-surface mb-1.5">Kegiatan</label>
+              <input
+                type="text"
+                value={formData.kegiatan}
+                onChange={(e) => setFormData((p) => ({ ...p, kegiatan: e.target.value }))}
+                placeholder="Contoh: Konsultasi Implementasi KOSP"
+                className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary"
+                required
+              />
             </div>
             <div className="md:col-span-2">
-              <label className="block font-label-md text-on-surface mb-1.5">Catatan / Hasil Pendampingan</label>
-              <textarea value={formData.catatanHasil} onChange={(e) => setFormData((p) => ({ ...p, catatanHasil: e.target.value }))} placeholder="Tulis catatan hasil pendampingan..." rows={3} className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary resize-none" />
+              <label className="block font-label-md text-on-surface mb-1.5">Capaian Pendampingan</label>
+              <textarea
+                value={formData.capaian}
+                onChange={(e) => setFormData((p) => ({ ...p, capaian: e.target.value }))}
+                placeholder="Tulis capaian pendampingan..."
+                rows={3}
+                className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary resize-none"
+              />
             </div>
             <div className="md:col-span-2">
-              <label className="block font-label-md text-on-surface mb-1.5">Umpan Balik</label>
-              <textarea value={formData.umpanBalik} onChange={(e) => setFormData((p) => ({ ...p, umpanBalik: e.target.value }))} placeholder="Tulis umpan balik untuk sekolah..." rows={2} className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary resize-none" />
+              <label className="block font-label-md text-on-surface mb-1.5">Kendala</label>
+              <textarea
+                value={formData.kendala}
+                onChange={(e) => setFormData((p) => ({ ...p, kendala: e.target.value }))}
+                placeholder="Tulis kendala yang ditemui..."
+                rows={2}
+                className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary resize-none"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block font-label-md text-on-surface mb-1.5">Solusi / Tindak Lanjut</label>
+              <textarea
+                value={formData.solusi}
+                onChange={(e) => setFormData((p) => ({ ...p, solusi: e.target.value }))}
+                placeholder="Tulis solusi atau tindak lanjut..."
+                rows={2}
+                className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary resize-none"
+              />
             </div>
           </div>
           <div className="flex justify-end gap-3 mt-4">
-            <button type="button" onClick={() => { setShowForm(false); setFormData({ tanggal: "", fokusPendampingan: "", catatanHasil: "", umpanBalik: "" }); }} className="px-6 py-3 border border-outline-variant rounded-lg font-bold text-on-surface-variant hover:bg-surface-container-highest">Batal</button>
+            <button type="button" onClick={() => { setShowForm(false); setFormData({ sekolah: "", tanggal: "", kegiatan: "", capaian: "", kendala: "", solusi: "" }); }} className="px-6 py-3 border border-outline-variant rounded-lg font-bold text-on-surface-variant hover:bg-surface-container-highest">Batal</button>
             <button type="button" onClick={handleSave} className="px-6 py-3 bg-primary text-on-primary rounded-lg font-bold hover:opacity-90 transition-opacity">Simpan</button>
           </div>
         </div>
@@ -437,32 +484,33 @@ function LogbookPengawas({ schools }) {
 
       <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
         <div className="p-stack-lg border-b border-outline-variant/30">
-          <h3 className="font-title-md text-title-md text-on-surface">Riwayat Kunjungan - {school.name}</h3>
+          <h3 className="font-title-md text-title-md text-on-surface">Riwayat Pendampingan - {school.name}</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead className="bg-surface-container-low">
               <tr>
-                {["Tanggal", "Fokus Pendampingan", "Catatan Hasil", "Umpan Balik", "Aksi"].map((h) => (
+                {["Hari / Tanggal", "Kegiatan", "Capaian Pendampingan", "Kendala", "Solusi / Tindak Lanjut", "Aksi"].map((h) => (
                   <th key={h} className="px-stack-lg py-4 font-label-md text-on-surface-variant uppercase tracking-wider">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant/30">
-              {entries.length === 0 ? (
+              {filteredEntries.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-stack-lg py-8 text-center text-on-surface-variant">
+                  <td colSpan={6} className="px-stack-lg py-8 text-center text-on-surface-variant">
                     <MaterialSymbol icon="event_busy" className="text-4xl text-outline mb-2" />
-                    <p className="text-label-md">Belum ada catatan kunjungan</p>
+                    <p className="text-label-md">Belum ada catatan pendampingan</p>
                   </td>
                 </tr>
               ) : (
-                entries.map((entry) => (
+                filteredEntries.map((entry) => (
                   <tr key={entry.id} className="hover:bg-surface-container-lowest transition-colors">
                     <td className="px-stack-lg py-5 text-body-md text-on-surface-variant">{entry.tanggal}</td>
-                    <td className="px-stack-lg py-5 text-body-md text-on-surface font-medium">{entry.fokusPendampingan}</td>
-                    <td className="px-stack-lg py-5 text-body-md text-on-surface-variant max-w-[200px] truncate">{entry.catatanHasil || "-"}</td>
-                    <td className="px-stack-lg py-5 text-body-md text-on-surface-variant max-w-[150px] truncate">{entry.umpanBalik || "-"}</td>
+                    <td className="px-stack-lg py-5 text-body-md text-on-surface font-medium">{entry.kegiatan}</td>
+                    <td className="px-stack-lg py-5 text-body-md text-on-surface-variant max-w-[200px] truncate">{entry.capaian || "-"}</td>
+                    <td className="px-stack-lg py-5 text-body-md text-on-surface-variant max-w-[150px] truncate">{entry.kendala || "-"}</td>
+                    <td className="px-stack-lg py-5 text-body-md text-on-surface-variant max-w-[150px] truncate">{entry.solusi || "-"}</td>
                     <td className="px-stack-lg py-5">
                       <button type="button" onClick={() => handleDelete(entry.id)} className="p-2 hover:bg-surface-container-highest rounded-lg text-error" title="Hapus">
                         <MaterialSymbol icon="delete" />
@@ -485,9 +533,11 @@ function Supervisi({ schools }) {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     tanggal: "",
+    status: "jadwal",
     evaluasi: "",
     temuan: "",
     rekomendasi: "",
+    catatanHasil: "",
   });
 
   const school = schools.find((s) => s.slug === selectedSchool) || schools[0];
@@ -501,15 +551,17 @@ function Supervisi({ schools }) {
       schoolSlug: selectedSchool,
       schoolName: school.name,
       tanggal: formData.tanggal,
+      status: formData.status,
       evaluasi: formData.evaluasi,
       temuan: formData.temuan,
       rekomendasi: formData.rekomendasi,
+      catatanHasil: formData.catatanHasil,
       createdAt: Date.now(),
     };
     const updated = [newNote, ...notes];
     setNotes(updated);
     saveSupervisiNotes(updated);
-    setFormData({ tanggal: "", evaluasi: "", temuan: "", rekomendasi: "" });
+    setFormData({ tanggal: "", status: "jadwal", evaluasi: "", temuan: "", rekomendasi: "", catatanHasil: "" });
     setShowForm(false);
   };
 
@@ -518,6 +570,27 @@ function Supervisi({ schools }) {
     setNotes(updated);
     saveSupervisiNotes(updated);
   };
+
+  const handleStatusChange = (id, newStatus) => {
+    const updated = notes.map((n) =>
+      n.id === id ? { ...n, status: newStatus } : n
+    );
+    setNotes(updated);
+    saveSupervisiNotes(updated);
+  };
+
+  const handleSaveCatatan = (id, catatanHasil) => {
+    const updated = notes.map((n) =>
+      n.id === id ? { ...n, catatanHasil } : n
+    );
+    setNotes(updated);
+    saveSupervisiNotes(updated);
+  };
+
+  const statusLabel = (s) => ({ jadwal: "Jadwal", selesai: "Selesai", pending: "Pending" })[s] ?? s;
+
+  const statusClass = (s) =>
+    ({ jadwal: "status-pending", selesai: "status-verified", pending: "status-draft" })[s] ?? "status-draft";
 
   return (
     <section className="space-y-gutter">
@@ -559,6 +632,14 @@ function Supervisi({ schools }) {
               <label className="block font-label-md text-on-surface mb-1.5">Tanggal Supervisi</label>
               <input type="date" value={formData.tanggal} onChange={(e) => setFormData((p) => ({ ...p, tanggal: e.target.value }))} className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface focus:outline-none focus:border-primary" required />
             </div>
+            <div>
+              <label className="block font-label-md text-on-surface mb-1.5">Status</label>
+              <select value={formData.status} onChange={(e) => setFormData((p) => ({ ...p, status: e.target.value }))} className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface focus:outline-none focus:border-primary">
+                <option value="jadwal">Jadwal</option>
+                <option value="pending">Pending</option>
+                <option value="selesai">Selesai</option>
+              </select>
+            </div>
             <div className="md:col-span-2">
               <label className="block font-label-md text-on-surface mb-1.5">Evaluasi</label>
               <textarea value={formData.evaluasi} onChange={(e) => setFormData((p) => ({ ...p, evaluasi: e.target.value }))} placeholder="Tulis evaluasi supervisi..." rows={3} className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary resize-none" required />
@@ -571,9 +652,13 @@ function Supervisi({ schools }) {
               <label className="block font-label-md text-on-surface mb-1.5">Rekomendasi Solusi</label>
               <textarea value={formData.rekomendasi} onChange={(e) => setFormData((p) => ({ ...p, rekomendasi: e.target.value }))} placeholder="Tulis rekomendasi solusi..." rows={2} className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary resize-none" />
             </div>
+            <div className="md:col-span-2">
+              <label className="block font-label-md text-on-surface mb-1.5">Catatan / Rekomendasi Hasil Supervisi</label>
+              <textarea value={formData.catatanHasil} onChange={(e) => setFormData((p) => ({ ...p, catatanHasil: e.target.value }))} placeholder="Tulis catatan atau rekomendasi hasil supervisi..." rows={2} className="w-full px-3 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary resize-none" />
+            </div>
           </div>
           <div className="flex justify-end gap-3 mt-4">
-            <button type="button" onClick={() => { setShowForm(false); setFormData({ tanggal: "", evaluasi: "", temuan: "", rekomendasi: "" }); }} className="px-6 py-3 border border-outline-variant rounded-lg font-bold text-on-surface-variant hover:bg-surface-container-highest">Batal</button>
+            <button type="button" onClick={() => { setShowForm(false); setFormData({ tanggal: "", status: "jadwal", evaluasi: "", temuan: "", rekomendasi: "", catatanHasil: "" }); }} className="px-6 py-3 border border-outline-variant rounded-lg font-bold text-on-surface-variant hover:bg-surface-container-highest">Batal</button>
             <button type="button" onClick={handleSave} className="px-6 py-3 bg-primary text-on-primary rounded-lg font-bold hover:opacity-90 transition-opacity">Simpan</button>
           </div>
         </div>
@@ -587,7 +672,7 @@ function Supervisi({ schools }) {
           <table className="w-full text-left border-collapse">
             <thead className="bg-surface-container-low">
               <tr>
-                {["Tanggal", "Evaluasi", "Temuan Lapangan", "Rekomendasi", "Aksi"].map((h) => (
+                {["Tanggal", "Status", "Evaluasi", "Temuan Lapangan", "Rekomendasi", "Catatan / Rekomendasi Hasil", "Aksi"].map((h) => (
                   <th key={h} className="px-stack-lg py-4 font-label-md text-on-surface-variant uppercase tracking-wider">{h}</th>
                 ))}
               </tr>
@@ -595,7 +680,7 @@ function Supervisi({ schools }) {
             <tbody className="divide-y divide-outline-variant/30">
               {schoolNotes.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-stack-lg py-8 text-center text-on-surface-variant">
+                  <td colSpan={7} className="px-stack-lg py-8 text-center text-on-surface-variant">
                     <MaterialSymbol icon="event_busy" className="text-4xl text-outline mb-2" />
                     <p className="text-label-md">Belum ada catatan supervisi</p>
                   </td>
@@ -604,9 +689,21 @@ function Supervisi({ schools }) {
                 schoolNotes.map((note) => (
                   <tr key={note.id} className="hover:bg-surface-container-lowest transition-colors">
                     <td className="px-stack-lg py-5 text-body-md text-on-surface-variant">{note.tanggal}</td>
+                    <td className="px-stack-lg py-5">
+                      <select
+                        value={note.status}
+                        onChange={(e) => handleStatusChange(note.id, e.target.value)}
+                        className="status-pill border-0 cursor-pointer bg-transparent font-bold text-label-sm"
+                      >
+                        <option value="jadwal">Jadwal</option>
+                        <option value="pending">Pending</option>
+                        <option value="selesai">Selesai</option>
+                      </select>
+                    </td>
                     <td className="px-stack-lg py-5 text-body-md text-on-surface max-w-[200px]">{note.evaluasi}</td>
                     <td className="px-stack-lg py-5 text-body-md text-on-surface-variant max-w-[150px] truncate">{note.temuan || "-"}</td>
                     <td className="px-stack-lg py-5 text-body-md text-on-surface-variant max-w-[150px] truncate">{note.rekomendasi || "-"}</td>
+                    <td className="px-stack-lg py-5 text-body-md text-on-surface-variant max-w-[200px] truncate">{note.catatanHasil || "-"}</td>
                     <td className="px-stack-lg py-5">
                       <button type="button" onClick={() => handleDelete(note.id)} className="p-2 hover:bg-surface-container-highest rounded-lg text-error" title="Hapus">
                         <MaterialSymbol icon="delete" />
@@ -685,10 +782,10 @@ export default function PortalPengawas() {
           </div>
           <button
             type="button"
-            onClick={() => {
-              logout();
-              navigate("/login-pengawas");
-            }}
+onClick={() => {
+               logout();
+               navigate("/");
+             }}
             className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-error text-on-error rounded-xl font-bold hover:opacity-90 transition-opacity"
           >
             <MaterialSymbol icon="logout" />
