@@ -6,6 +6,7 @@ import LogbookPendampingan from "./pages/LogbookPendampingan.jsx";
 import LoginPortalSekolah from "./components/portal/LoginPortalSekolah.jsx";
 import LoginPengawas from "./pages/LoginPengawas.jsx";
 import PortalPengawas from "./pages/PortalPengawas.jsx";
+import JurnalPendampingan from "./pages/JurnalPendampingan.jsx";
 
 export default function App() {
   return (
@@ -18,6 +19,8 @@ export default function App() {
       <Route path="/portal-review" element={<PortalReviewPengawas />} />
       <Route path="/logbook/:school" element={<LogbookPendampingan />} />
       <Route path="/logbook" element={<LogbookPendampingan />} />
+      <Route path="/jurnal-pendampingan/:school" element={<JurnalPendampingan />} />
+      <Route path="/jurnal-pendampingan" element={<JurnalPendampingan />} />
       <Route path="/login-pengawas" element={<LoginPengawas />} />
       <Route path="/portal-pengawas" element={<PortalPengawas />} />
     </Routes>

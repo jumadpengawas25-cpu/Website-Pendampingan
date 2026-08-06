@@ -15,6 +15,9 @@ export default function SideNavBar({ school, schoolName }) {
   const reviewHref = schoolSlug
     ? `/portal-review/${schoolSlug}`
     : "/portal-review";
+  const jurnalHref = schoolSlug
+    ? `/jurnal-pendampingan/${schoolSlug}`
+    : "/jurnal-pendampingan";
 
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
@@ -33,6 +36,7 @@ export default function SideNavBar({ school, schoolName }) {
     { label: "Dashboard", icon: "dashboard", href: "#" },
     { label: "Verification", icon: "verified_user", href: portalHref },
     { label: "Review", icon: "verified_user", href: reviewHref },
+    { label: "Jurnal Pendampingan", icon: "menu_book", href: jurnalHref },
     { label: "Ubah Password", icon: "lock", action: "password" },
   ];
 
